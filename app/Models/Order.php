@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Order extends Model
+{
+    protected $guarded = ['id'];
+
+    public function costumer()
+    {
+        return $this->belongsTo(Costumer::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function productPrice(){
+        return $this->belongsTo(ProductPrice::class);
+    }
+}

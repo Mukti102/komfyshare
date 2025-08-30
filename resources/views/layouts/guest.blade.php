@@ -19,7 +19,10 @@
 
 <body class="font-sans text-gray-900 bg-gray-50 antialiased">
     @include('partials.navbar')
+
     <div>
+        <x-alert />
+
         @yield('content')
     </div>
     <!-- Back to Top Button -->
@@ -31,11 +34,11 @@
     </button>
 
     @include('partials.footer')
+    @include('sweetalert::alert')
     @livewireScripts
 </body>
 @include('includes.scripts')
 @stack('scripts')
 
-{{-- @include('sweetalert::alert') --}}
 
 </html>

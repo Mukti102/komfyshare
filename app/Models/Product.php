@@ -12,6 +12,10 @@ class Product extends Model
         'listOfBenefits' => 'array',
     ];
 
+    public function groups(){
+        return $this->hasMany(Group::class);
+    }
+
 
     public function prices()
     {
