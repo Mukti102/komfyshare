@@ -5,12 +5,12 @@
     $firstArticle = $articles->first();
 @endphp
     @livewire('hero-article',['article' => $firstArticle])
-    <section id="articles" class="py-20 bg-dark">
+    <section id="articles" class="py-10 md:py-20 bg-dark">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Search Bar -->
             <div class="relative max-w-md mx-auto mb-12 animate-slide-up">
                 <input type="text" placeholder="Cari artikel inspiratif..."
-                    class="w-full px-6 py-4 rounded-full border-2 border-white bg-white/80 backdrop-blur-sm shadow-lg focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                    class="w-full placeholder:text-sm placeholder:md:text-base px-4 md:px-6 py-3 md:py-4 rounded-full border-2 border-white bg-white/80 backdrop-blur-sm shadow-lg focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
                     id="searchInput">
                 <button
                     class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary text-white p-2 rounded-full hover:shadow-lg transition-all">

@@ -79,6 +79,10 @@ class OrderResource extends Resource
                                 }
                             })
                             ->required(),
+                        Forms\Components\Select::make('payment_metod_id')
+                            ->label('Metode Pembayaran')
+                            ->relationship('paymentMethod', 'name')
+                            ->required(),
 
                         Forms\Components\TextInput::make('amount')
                             ->label('Total Harga')
@@ -222,7 +226,6 @@ class OrderResource extends Resource
                                         'group_id'    => $group->id,
                                         'costumer_id' => $record->costumer_id,
                                     ]);
-
 
                                     // send whatsapp
                                     SendWhatsapp::dispatch($record->costumer->phone, 'Pesanan Anda Sudah Aktif dengan sampai tanggal' . $group->expired_date . 'silahkan akses akun anda email:' . $group->email . 'password:' . $group->password . 'di' . $group->product->name);

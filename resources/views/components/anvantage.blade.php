@@ -43,33 +43,30 @@
 </style>
 @endpush
 
-<section class="bg-gray-50">
-    <div class="flex flex-col lg:flex-row gap-8 lg:gap-0 w-full py-12 lg:pb-10 px-4 lg:px-0 mx-auto items-center">
-        
+<section class="bg-gray-50 mb-0">
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-0    w-full md:py-12 lg:pb-10 px-4 lg:px-0 mx-auto items-center">
         <!-- Left - Floating Cards -->
-        <div class="w-full lg:w-[40%] h-96 lg:h-[300px] relative order-2 lg:order-1 flex items-center justify-center z-0">
+        <div class="w-full  lg:w-[40%] h-96 lg:h-[300px] relative order-2 lg:order-1 hidden md:hidden sm:hidden lg:flex items-center justify-center z-0">
             <div class="relative -top-32 left-20 items-center justify-center gap-6">
-                <div class="floating-animation absolute top-2 lg:-top-10 right-2 lg:right-6 w-40 lg:w-40 lg:h-72 overflow-hidden z-10" style="--rotate: 0deg;">
-                    <img src="https://framerusercontent.com/images/cw09SKaoQvtUZeFXSvXHtKq8c.png?scale-down-to=512" class="w-full h-full object-cover" alt="">
+                <div class="floating-animation absolute top-2 lg:-top-10 right-2 lg:right-6 w-40 lg:w-40 lg:h-72 overflow-hidden z-20" style="--rotate: 0deg;">
+                    <img src="{{asset('assets/card1.png')}}" class="w-full h-full object-cover" alt="">
                 </div>
-                <div class="floating-animation absolute top-2 lg:top-6 right-2 lg:right-40 w-40 lg:w-40 lg:h-72 overflow-hidden z-20" style="--rotate: 8deg;">
-                    <img src="https://framerusercontent.com/images/cw09SKaoQvtUZeFXSvXHtKq8c.png?scale-down-to=512" class="w-full h-full object-cover" alt="">
+                <div class="floating-animation absolute top-2 lg:top-6 right-2 lg:right-40 w-40 lg:w-40 lg:h-72 overflow-hidden z-10" style="--rotate: 8deg;">
+                    <img src="{{asset('assets/card2.png')}}" class="w-full h-full object-cover" alt="">
                 </div>
-                <div class="floating-animation absolute top-2 lg:-top-20 right-2 lg:-right-28 w-40 lg:w-40 lg:h-72 overflow-hidden z-20" style="--rotate: -20deg;">
-                    <img src="https://framerusercontent.com/images/cw09SKaoQvtUZeFXSvXHtKq8c.png?scale-down-to=512" class="w-full h-full object-cover" alt="">
+                <div class="floating-animation absolute top-2 lg:-top-24 right-2 lg:-right-36 w-40 lg:w-52 lg:h-72 overflow-hidden z-10" style="--rotate: -10deg;">
+                    <img src="{{asset('assets/card3.png')}}" class="w-full h-full object-cover" alt="">
                 </div>
-                <div class="floating-animation absolute top-2 lg:top-24 right-2 lg:-right-20 w-40 lg:w-40 lg:h-72 overflow-hidden z-10" style="--rotate: -12deg;">
-                    <img src="https://framerusercontent.com/images/cw09SKaoQvtUZeFXSvXHtKq8c.png?scale-down-to=512" class="w-full h-full object-cover" alt="">
+                <div class="floating-animation absolute top-2 lg:top-24 right-2 lg:-right-32 w-40 lg:w-52 lg:h-72 overflow-hidden z-30" style="--rotate: -0deg;">
+                    <img src="{{asset('assets/card4.png')}}" class="w-full h-full object-cover" alt="">
                 </div>
             </div>
         </div>
 
         <!-- Right - Content -->
         <div class="w-full lg:w-1/2 px-4 text-center lg:px-0 space-y-6 order-1 lg:order-2 flex flex-col justify-center relative z-50">
-            <h2 class="text-3xl lg:text-6xl font-black text-gray-900 uppercase dark:text-white">
-                Komfy.<span class="text-primary">Bayarnya</span>
-            </h2>
-            <p class="text-base lg:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+            <img src="{{asset('assets/komfybayarnya.png')}}" alt="">
+            <p class="text-sm lg:text-lg text-gray-600  leading-relaxed">
                 Nikmati kemudahan bertransaksi dengan berbagai metode pembayaran yang nyaman dan terjangkau. Komfy Share mendukung pembayaran melalui DANA, QRIS, ShopeePay, dan OVO, sehingga Anda bisa memilih cara yang paling praktis sesuai kebutuhan.
             </p>
             <h3 class="uppercase text-sm lg:text-2xl font-black text-primary">

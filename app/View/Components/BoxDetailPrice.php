@@ -11,9 +11,10 @@ class BoxDetailPrice extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public $product;
+    public function __construct($product)
     {
-        //
+        $this->product = $product;
     }
 
     /**

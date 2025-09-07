@@ -16,7 +16,7 @@
        </style>
    @endpush
 
-   <div class="container mx-auto px-4">
+   <div id="service" class="container mx-auto px-4">
        <!-- Header Section -->
        <div class="text-center mb-16">
            <h1 class="text-4xl md:text-5xl font-black text-gray-800 mb-4">Layanan Digital <span

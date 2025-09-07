@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Jobs\SendWhatsapp;
 use App\Models\Costumer;
 use App\Models\Order;
+use App\Models\PaymentMetods;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -18,6 +19,7 @@ class BoxPaket extends Component
     use WithFileUploads;
 
     public $prices;
+    public $paymentMethods;
     public $selectedPriceId;
     public $price;
     public $slot = 1;
@@ -28,10 +30,16 @@ class BoxPaket extends Component
     public $phone;
     public $invoice;
     public $payment_proof;
+    public $paymentMethodId=null;
 
     public function mount($prices)
     {
         $this->prices = $prices;
+        $this->paymentMethods = PaymentMetods::all();
+    }
+
+    public function setPaymentMethodId($paymentMethodId){
+        $this->paymentMethodId = $paymentMethodId;
     }
 
     public function checkout()
@@ -47,6 +55,8 @@ class BoxPaket extends Component
             return;
         }
 
+        $total = $this->order->price - ( $this->order->price * $this->order->product->discount) / 100;
+        $amount = $total * (int) $this->slot;
         $this->cart = [
             'name' => $this->name,
             'email' => $this->email,
@@ -54,7 +64,7 @@ class BoxPaket extends Component
             'product_id' => $this->order->product->id,
             'product_price_id' => $this->order->id,
             'quantity' => $this->slot,
-            'amount' => $this->order->price * (int) $this->slot,
+            'amount' => $amount,
             'invoice'  => $this->invoice ?? 'INV-' . strtoupper(uniqid()),
             'start_date' => now(),
             'status' => 'pending',
@@ -110,6 +120,7 @@ class BoxPaket extends Component
                 'quantity'          => $this->cart['quantity'],
                 'amount'            => $this->cart['amount'],
                 'start_date'        => $this->cart['start_date'],
+                'payment_metod_id'  => $this->paymentMethodId,
                 'status'            => 'pending',
                 'payment_proof'     => $path,
             ];
@@ -164,7 +175,7 @@ class BoxPaket extends Component
     }
 
     public function makeOrder()
-    {
+    {   
         $this->invoice = 'INV-' . strtoupper(uniqid());
         $this->order = collect($this->prices)->firstWhere('id', $this->selectedPriceId);
     }

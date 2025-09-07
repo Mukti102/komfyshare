@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Brand;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -11,9 +12,10 @@ class MarqueeLogo extends Component
     /**
      * Create a new component instance.
      */
+    public $brands;
     public function __construct()
     {
-        //
+        $this->brands = Brand::all();
     }
 
     /**

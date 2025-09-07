@@ -1,49 +1,27 @@
-<div class="container mx-auto py-10">
-    <div id="default-carousel" class="relative  w-full" data-carousel="slide">
+<div class="hidden md:block mx-auto py-0 md:py-10 px-5 md:px-20 ">
+    <div id="default-carousel" class="relative  md:h-80 h-52   w-full" data-carousel="slide">
         <!-- Carousel wrapper -->
-        <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-            <!-- Item 1 -->
-            <div class="duration-700 ease-in-out" data-carousel-item>
-                <img src="https://framerusercontent.com/images/0S6vzzhg7nZGp95Qc49nvqbBpoc.png"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 2 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="https://framerusercontent.com/images/PrZkrLPh7C9w9ig269Tx9rPJEg.png"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 3 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="https://framerusercontent.com/images/0S6vzzhg7nZGp95Qc49nvqbBpoc.png"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 4 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="https://framerusercontent.com/images/PrZkrLPh7C9w9ig269Tx9rPJEg.png"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 5 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="https://framerusercontent.com/images/0S6vzzhg7nZGp95Qc49nvqbBpoc.png"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
+        <div class="relative  overflow-hidden z-30  rounded-lg h-full">
+            
+            @foreach (setting('poster') as $poster)
+                <!-- Item 1 -->
+                <div class=" duration-700  ease-in-out h-full" data-carousel-item>
+                    <img src="{{ asset('storage/' . $poster['poster']) }}"
+                        class="absolute block rounded-xl w-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                        alt="...">
+                </div>
+            @endforeach
         </div>
         <!-- Slider indicators -->
         <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-            <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1"
-                data-carousel-slide-to="0"></button>
-            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2"
-                data-carousel-slide-to="1"></button>
-            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3"
-                data-carousel-slide-to="2"></button>
-            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4"
-                data-carousel-slide-to="3"></button>
-            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5"
-                data-carousel-slide-to="4"></button>
+            @foreach (setting('poster') as $index => $item)
+                <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1"
+                    data-carousel-slide-to="{{ $index }}"></button>
+            @endforeach
         </div>
         <!-- Slider controls -->
         <button type="button"
-            class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+            class="absolute top-0 start-0 z-50 flex items-center justify-center h-full px-4 cursor-pointer  focus:outline-none"
             data-carousel-prev>
             <span
                 class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
@@ -56,7 +34,7 @@
             </span>
         </button>
         <button type="button"
-            class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+            class="absolute top-0 end-0 z-50 flex items-center justify-center h-full px-4 cursor-pointer focus:outline-none"
             data-carousel-next>
             <span
                 class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
@@ -70,7 +48,62 @@
         </button>
     </div>
     <div class="md:w-full w-[90%] mx-auto">
-        <h1 class="md:text-5xl text-xl font-bold text-center mt-5 text-white">
+        <h1 class="md:text-5xl text-xl  text-center mt-5 text-white">
+            Bersama Komfy Share, Layanan Premium Jadi Legal, Nyaman, dan Lebih Hemat
+        </h1>
+    </div>
+</div>
+
+{{-- mobile --}}
+<div class="md:hidden block mx-auto py-0 md:py-10 px-5 md:px-20 ">
+    <div id="default-carousel" class="relative   md:h-80 h-60   w-full" data-carousel="slide">
+        <!-- Carousel wrapper -->
+        <div class="relative  overflow-hidden z-30  rounded-lg h-full">
+            @foreach (setting('poster_mobile') as $poster)
+            <div class="duration-700 mobile-only md:hidden  ease-in-out h-full " data-carousel-item>
+                <img src="{{asset('storage/'.$poster['poster'])}}"
+                    class="absolute block w-full object-contain rounded-lg  -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                    alt="...">
+            </div>
+            @endforeach
+        </div>
+        <!-- Slider indicators -->
+        <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+            @foreach (setting('poster_mobile') as $index => $item)
+                <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1"
+                    data-carousel-slide-to="{{ $index }}"></button>
+            @endforeach
+        </div>
+        <!-- Slider controls -->
+        <button type="button"
+            class="absolute top-0 start-0 z-50 flex items-center justify-center h-full px-4 cursor-pointer  focus:outline-none"
+            data-carousel-prev>
+            <span
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 1 1 5l4 4" />
+                </svg>
+                <span class="sr-only">Previous</span>
+            </span>
+        </button>
+        <button type="button"
+            class="absolute top-0 end-0 z-50 flex items-center justify-center h-full px-4 cursor-pointer  focus:outline-none"
+            data-carousel-next>
+            <span
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 9 4-4-4-4" />
+                </svg>
+                <span class="sr-only">Next</span>
+            </span>
+        </button>
+    </div>
+    <div class="md:w-full w-[90%] mx-auto">
+        <h1 class="md:text-5xl text-xl  text-center mt-5 text-white">
             Bersama Komfy Share, Layanan Premium Jadi Legal, Nyaman, dan Lebih Hemat
         </h1>
     </div>

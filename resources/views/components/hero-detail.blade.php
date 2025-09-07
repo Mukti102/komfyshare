@@ -1,6 +1,6 @@
 <section
     class="md:min-h-screen h-[40rem] bg-black relative overflow-hidden ">
-    <img src="https://framerusercontent.com/images/gPemogTYPTT5Xp4sd1tGPwcGJE.png" alt=""
+    <img src="{{asset('storage/'. $product->thumbnail)}}" alt=""
         class="absolute md:scale-[1.50]  scale-[1.40] -rotate-[10deg] top-10 md:top-0 -right-[5rem] z-20 ">
     <!-- Left Content -->
     <div class="mx-auto px-6 lg:px-0 relative z-50">
@@ -23,10 +23,10 @@
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <button
-                            class="bg-primary shadow-md text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-pink-600 transition-all duration-300 text-xl">
+                        <a href="#form"
+                            class="bg-primary w-max shadow-md text-white font-bold px-5 md:px-8 py-2.5 md:py-4 rounded-full hover:bg-white hover:text-pink-600 transition-all duration-300 text-sm md:text-xl">
                             Dapatkan Premium
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

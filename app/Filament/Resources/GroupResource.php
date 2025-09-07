@@ -23,7 +23,7 @@ class GroupResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
-     public static function getNavigationBadge(): ?string
+    public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
@@ -94,21 +94,26 @@ class GroupResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->button(),
-                Action::make('Lihat Slot')
+                Tables\Actions\Action::make('Lihat Slot')
                     ->icon('heroicon-o-eye')
                     ->button()
                     ->color('info')
-                    ->modalHeading('Slots Terkait Order')
-                    ->modalWidth('xl') // ukuran modal
-                    ->modalContent(function ($record) {
-                        // Ambil slots terkait
-                        $slots = $record->slots;
+                    ->url(fn($record) => GroupResource::getUrl('slots', ['record' => $record])),
+                // Action::make('Lihat Slot')
+                //     ->icon('heroicon-o-eye')
+                //     ->button()
+                //     ->color('info')
+                //     ->modalHeading('Slots Terkait Order')
+                //     ->modalWidth('xl') // ukuran modal
+                //     ->modalContent(function ($record) {
+                //         // Ambil slots terkait
+                //         $slots = $record->slots;
 
-                        // Tampilkan tabel sederhana
-                        return view('filament.tables.partials.slots-modal', [
-                            'slots' => $slots,
-                        ]);
-                    }),
+                //         // Tampilkan tabel sederhana
+                //         return view('filament.tables.partials.slots-modal', [
+                //             'slots' => $slots,
+                //         ]);
+                //     }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -130,6 +135,7 @@ class GroupResource extends Resource
             'index' => Pages\ListGroups::route('/'),
             'create' => Pages\CreateGroup::route('/create'),
             'edit' => Pages\EditGroup::route('/{record}/edit'),
+            'slots' => Pages\GroupSlots::route('/{record}/slots'),
         ];
     }
 }

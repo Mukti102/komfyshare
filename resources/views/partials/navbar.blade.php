@@ -1,39 +1,42 @@
 <!-- Tambahkan di <head> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-<nav class="gradient-bg fixed top-0 w-full z-[10000] shadow-lg">
+<nav class="bg-dark fixed top-0 w-full z-[10000] shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
-            <div class="flex-shrink-0">
-                <img src="" class="w-14" alt="">
+            <a href="/" class="flex-shrink-0">
+                <img src="{{ setting('general.logo')
+                    ? asset('storage/' . setting('general.logo'))
+                    : 'https://framerusercontent.com/images/oy9SYJ2WmyA8UPfKd9dELJTEbxE.png?scale-down-to=512&width=1131&height=1079' }}"
+                    class="w-14" alt="">
                 {{-- <span class="text-2xl font-bold text-white">PESAN <span class="text-primary">BICARA</span></span> --}}
-            </div>
+            </a>
 
             <!-- Desktop Navigation -->
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-8">
                     <a href="/"
                         class="text-white hover:text-primary px-3 py-2 text-sm font-medium transition-colors">Beranda</a>
-                    <a href="{{ route('profile.edit') }}"
+                    <a href="#benefit"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white ">Keunggulan
                         Kami</a>
-                    <a href=""
+                    <a href="#stepByStep"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white ">Cara
                         Langganan</a>
-                    <a href=""
+                    <a href="#service"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white">Layanan</a>
-                    <a href=""
+                    <a href="#faq"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white">FAQ</a>
-                    <a href=""
+                    <a href="https://wa.me/{{ setting('general.phone') }}" target="_blank"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white">Testimoni</a>
-                    <a href="{{route('article.index')}}"
-                        class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white">Article</a>
+                    <a href="{{ route('article.index') }}"
+                        class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors {{ request()->is('article*') ? 'text-primary' : 'text-white' }} ">Artikel</a>
 
                 </div>
             </div>
 
-            @guest
+            {{-- @guest
                 <!-- Desktop Auth Buttons -->
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center space-x-4">
@@ -81,13 +84,13 @@
                         </form>
                     </div>
                 </div>
-            @endauth
+            @endauth --}}
 
 
             <!-- Mobile Hamburger Button -->
             <div class="md:hidden flex gap-2 items-center">
 
-                @auth
+                {{-- @auth
                     @php
                         $user = auth()->user();
                     @endphp
@@ -119,7 +122,7 @@
                             </form>
                         </div>
                     </div>
-                @endauth
+                @endauth --}}
                 <button type="button" class="mobile-menu-button text-white hover:text-primary p-2 focus:outline-none"
                     onclick="toggleMobileMenu()">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,19 +138,21 @@
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
                 <a href="/"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary">Beranda</a>
-                <a href="{{ route('profile.edit') }}"
+                <a href="#benefit"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary  {{ request()->is('about*') ? 'bg-primary text-white rounded-lg' : '' }}">Keunggulan
                     Kami</a>
-                <a href=""
+                <a href="#stepByStep"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary  {{ request()->is('majalah*') ? 'bg-primary text-white rounded-lg' : '' }}">Cara
                     Langganan</a>
-                <a href=""
+                <a href="#service"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary {{ request()->is('programs*') ? 'bg-primary text-white rounded-lg' : '' }} ">Layanan</a>
-                <a href=""
+                <a href="#faq"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary {{ request()->is('programs*') ? 'bg-primary text-white rounded-lg' : '' }} ">FAQ</a>
-                <a href=""
+                <a href="https://wa.me/{{ setting('general.phone') }}"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary {{ request()->is('programs*') ? 'bg-primary text-white rounded-lg' : '' }} ">Testimoni</a>
-                @guest
+                <a href="{{route('article.index')}}"
+                    class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary {{ request()->is('article*') ? 'bg-primary text-white rounded-lg' : '' }} ">Artikel</a>
+                {{-- @guest
                     <!-- Auth Buttons -->
                     <div class="pt-4  space-y-2">
                         <a href="/login"
@@ -169,7 +174,7 @@
                             Logout
                         </button>
                     </form>
-                @endauth
+                @endauth --}}
             </div>
         </div>
     </div>

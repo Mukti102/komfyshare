@@ -5,9 +5,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- logo dan favicon --}}
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="{{ asset('storage/'. setting('general.logo')) }}">
+    <link rel="apple-touch-icon" href="{{ asset('storage/'. setting('general.favicon')) }}">
 
-    <title>@yield('title') </title>
-    <meta name="description" content="securely share your files with ease.">
+    {{-- Logo untuk share (Open Graph & Twitter) --}}
+    <meta property="og:title" content="{{setting('seo.title')}}">
+    <meta property="og:description" content="{{setting('seo.description')}}">
+    <meta property="og:image" content="{{ asset('storage/'. setting('general.logo')) }}">
+
+
+    <title>
+        @hasSection('title')
+            @yield('title')
+        @else
+            {{ setting('seo.title') }}
+        @endif
+    </title>
+
+    <meta name="description" content="{{ setting('seo.description') }}">
 
     <link rel="icon" href="" type="image/png">
     @livewireStyles
@@ -37,6 +54,7 @@
     @include('sweetalert::alert')
     @livewireScripts
 </body>
+
 @include('includes.scripts')
 @stack('scripts')
 

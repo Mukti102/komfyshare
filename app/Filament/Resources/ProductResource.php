@@ -25,7 +25,7 @@ class ProductResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-     public static function getNavigationBadge(): ?string
+    public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
@@ -56,31 +56,30 @@ class ProductResource extends Resource
                             ->label('Semua Paket Mencakup')
                             ->required(),
                         Forms\Components\FileUpload::make('thumbnail')
+                            ->required()
                             ->imageEditor()
                             ->disk('public')
                             ->directory('thumbnails')
-                            ->maxSize(2024) // 1MB
-                            ->required(),
+                        ,
                         Forms\Components\FileUpload::make('image')
                             ->image()
                             ->imageEditor()
                             ->disk('public')
                             ->directory('images')
-                            ->maxSize(2024) // 1MB
                             ->required(),
                         Repeater::make('prices')
                             ->relationship('prices')
                             ->schema([
                                 TextInput::make('duration')
-                                ->label('Durasi')
-                                ->placeholder('Durasi (misal: 1 Bulan, 3 Bulan, 1 Tahun)')
-                                ->required(),
+                                    ->label('Durasi')
+                                    ->placeholder('Durasi (misal: 1 Bulan, 3 Bulan, 1 Tahun)')
+                                    ->required(),
                                 TextInput::make('price')
-                                ->label('Harga')
-                                ->placeholder('100000')
-                                ->prefix('Rp ')
-                                ->numeric()
-                                ->required(),
+                                    ->label('Harga')
+                                    ->placeholder('100000')
+                                    ->prefix('Rp ')
+                                    ->numeric()
+                                    ->required(),
                             ])
                             ->columns(2),
                         Forms\Components\TextInput::make('discount')
@@ -91,10 +90,9 @@ class ProductResource extends Resource
                         Forms\Components\Toggle::make('status')
                             ->helperText('Jika non-aktif, produk tidak akan muncul di halaman depan.')
                             ->required(),
-                        Forms\Components\RichEditor::make('priceDetails')
+                        Forms\Components\TagsInput::make('priceDetails')
                             ->label('Detail Harga')
-                            ->required()
-                            ->columnSpanFull(),
+                            ->required(),
                         Forms\Components\RichEditor::make('description')
                             ->label('Schema Berlangganan')
                             ->required()

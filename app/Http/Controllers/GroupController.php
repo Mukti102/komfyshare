@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -10,10 +11,19 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $productId = $request->input('product_id') ?? Product::first()?->id;
+        $product   = Product::find($productId);
+
+        // Ambil groups sesuai product_id
+        $groups = $product?->groups()->with('slots.costumer')->get() ?? collect();
+
+        $products = Product::all();
+
+        return view('pages.groups.index', compact('product', 'groups', 'products'));
     }
+
 
     /**
      * Show the form for creating a new resource.

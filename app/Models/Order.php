@@ -21,4 +21,8 @@ class Order extends Model
     public function productPrice(){
         return $this->belongsTo(ProductPrice::class);
     }
+
+    public function paymentMethod(){
+        return $this->belongsTo(PaymentMetods::class);
+    }
 }

@@ -10,6 +10,7 @@ class Product extends Model
 
     protected $casts = [
         'listOfBenefits' => 'array',
+        'priceDetails' => 'array',
     ];
 
     public function groups(){
