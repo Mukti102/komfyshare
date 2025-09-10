@@ -195,6 +195,12 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('view')
+                    ->label('Lihat')
+                    ->button()
+                    ->color('primary')
+                    ->icon('heroicon-o-eye')
+                    ->url(fn(Order $record): string => static::getUrl('view', ['record' => $record])),
                 Tables\Actions\EditAction::make()
                     ->button()
                     ->color('warning'),
@@ -272,6 +278,7 @@ class OrderResource extends Resource
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
+            'view' => Pages\ViewOrder::route('/{record}'),
         ];
     }
 }

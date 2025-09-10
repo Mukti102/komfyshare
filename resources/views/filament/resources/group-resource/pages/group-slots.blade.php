@@ -297,7 +297,7 @@
                     <option class="text-white dark:text-white" value="">-- Pilih Customer --</option>
                     {{-- You'll need to add this property to your Livewire component --}}
                     @foreach ($customers as $customer)
-                        <option {{ $slot->costumer_id == $customer->id ? 'selected' : '' }}
+                        <option {{ $editCustomerId == $customer->id ? 'selected' : '' }}
                             value="{{ $customer->id }}">{{ $customer->name }} ({{ $customer->email }})</option>
                     @endforeach
                 </select>
