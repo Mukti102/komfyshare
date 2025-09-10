@@ -12,7 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->foreignId('payment_metod_id')->constrained('payment_metods')->onDelete('cascade');
+            if (!Schema::hasColumn('orders', 'payment_metod_id')) {
+                $table->unsignedBigInteger('payment_metod_id')->nullable();
+                $table->foreign('payment_metod_id')
+                      ->references('id')
+                      ->on('payment_metods')
+                      ->onDelete('cascade');
+            }
         });
     }
 
@@ -22,7 +28,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('payment_metod_id');
+            if (Schema::hasColumn('orders', 'payment_metod_id')) {
+                $table->dropForeign(['payment_metod_id']);
+                $table->dropColumn('payment_metod_id');
+            }
         });
     }
 };

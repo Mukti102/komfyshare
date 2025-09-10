@@ -4,9 +4,12 @@ namespace App\Livewire;
 
 use App\Jobs\SendWhatsapp;
 use App\Models\Costumer;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\PaymentMetods;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -30,20 +33,59 @@ class BoxPaket extends Component
     public $phone;
     public $invoice;
     public $payment_proof;
-    public $paymentMethodId=null;
+    public $paymentMethodId = null;
+    public $shareModal = false;
+    public $coupon;
+    public $discountPercentase = 0;
+    public $discountRupiah = 0;
+    public $codes = [];
+    public $countryCode;
+
+    // Di BoxPaket.php
+    public $testMessage = 'Initial';
+
+    public function testClick()
+    {
+        $this->testMessage = 'Button clicked at ' . now();
+    }
+
+
+    public function setShareModal()
+    {
+        $this->shareModal = !$this->shareModal;
+    }
 
     public function mount($prices)
     {
         $this->prices = $prices;
         $this->paymentMethods = PaymentMetods::all();
+        $this->paymentMethodId = $this->paymentMethods->first()->id;
+        // ✅ Panggil RestCountries API dari server
+        $response = Http::get('https://restcountries.com/v3.1/region/asia', [
+            'fields' => 'name,idd,cca2',
+        ]);
+
+        if ($response->ok()) {
+            $this->codes = collect($response->json())
+                ->filter(fn($c) => isset($c['idd']['root'])) // ambil hanya yg ada kode telp
+                ->map(fn($c) => [
+                    'code' => $c['idd']['root'] . ($c['idd']['suffixes'][0] ?? ''),
+                    'label' => $c['cca2'] . ' ',
+                ])
+                ->values()
+                ->all();
+            $this->countryCode = '+62';
+        }
     }
 
-    public function setPaymentMethodId($paymentMethodId){
+    public function setPaymentMethodId($paymentMethodId)
+    {
         $this->paymentMethodId = $paymentMethodId;
     }
 
     public function checkout()
     {
+
         $this->validate([
             'name' => 'required|min:3',
             'email' => 'required|email',
@@ -55,53 +97,105 @@ class BoxPaket extends Component
             return;
         }
 
-        $total = $this->order->price - ( $this->order->price * $this->order->product->discount) / 100;
-        $amount = $total * (int) $this->slot;
+
         $this->cart = [
             'name' => $this->name,
             'email' => $this->email,
-            'phone' => $this->phone,
+            'phone' => ltrim($this->countryCode, '+') . ltrim($this->phone, '0'),
             'product_id' => $this->order->product->id,
             'product_price_id' => $this->order->id,
             'quantity' => $this->slot,
-            'amount' => $amount,
+            'amount' => $this->totalPrice($this->order, $this->order->product->discount),
             'invoice'  => $this->invoice ?? 'INV-' . strtoupper(uniqid()),
             'start_date' => now(),
             'status' => 'pending',
             'payment_proof' => null,
         ];
 
+
+
         // setelah sukses, trigger event JS
         $this->dispatch('show-payment-modal');
     }
+
+
+    public function checkCoupon()
+    {
+        $coupon = Coupon::where('code', $this->coupon)->first();
+
+        if (!$coupon) {
+            session()->flash('error', 'Kupon tidak ditemukan');
+            return;
+        }
+
+        if (!$coupon->status) {
+            session()->flash('error', 'Kupon sudah tidak aktif');
+            return;
+        }
+
+        if ($coupon->sisa_stock <= 0) {
+            session()->flash('error', 'Penggunaan kupon sudah melebihi batas');
+            return;
+        }
+
+        if (Carbon::parse($coupon->expired_date)->isPast()) {
+            session()->flash('error', 'Kupon sudah kadaluarsa');
+            return;
+        }
+
+        // Potongan harga
+        $this->discountPercentase = (float) $coupon->percentase_discount;
+
+        // Decrement stock hanya jika kupon valid
+        $coupon->decrement('sisa_stock');
+
+        session()->flash('success', 'Kupon berhasil digunakan');
+    }
+
 
     public function selectPrice($priceId)
     {
         $this->selectedPriceId = $priceId;
     }
 
+
+    public function normalPrice($price)
+    {
+        if (is_object($price) && isset($price->price)) {
+
+            return $price->price; // kalau object & punya properti price
+        } else {
+            return $price;
+        }
+    }
+
+    // Hitung harga setelah diskon
+    public function finalPrice($price, $discount = null)
+    {
+        $discount = $discount ??  $price->product->discount ?? 0;
+        return $this->normalPrice($price) - ($this->normalPrice($price) * $discount / 100);
+    }
+
+    // Hitung total harga * slot
+    public function totalPrice($price, $discount = 0)
+    {
+        $resultDiscountPercentase = (float) $discount +  (float) $this->discountPercentase;
+        return $this->finalPrice($price, $resultDiscountPercentase) * ($this->slot ?? 1);
+    }
+
+
+
     public function confirmation()
     {
-
-        $this->validate([
-            'payment_proof' => 'required|image|max:2048', // max 2MB
-        ]);
-
         try {
 
-            Log::info('payment', ['message' => $this->payment_proof]);
             if (!$this->cart) {
                 $this->addError('cart', 'Data order tidak ditemukan. Silakan ulangi checkout.');
                 return;
             }
 
-            // simpan file bukti pembayaran
-            $filename = time() . '_' . Str::of($this->payment_proof->getClientOriginalName())->ascii()->replace(' ', '_');
-            $path = $this->payment_proof->storeAs('payment_proofs', $filename, 'public');
-
 
             // update cart dengan path bukti pembayaran
-            $this->cart['payment_proof'] = $path;
 
             $costumer = Costumer::updateOrCreate(
                 ['email' => $this->cart['email']],
@@ -119,48 +213,23 @@ class BoxPaket extends Component
                 'product_price_id'  => $this->cart['product_price_id'],
                 'quantity'          => $this->cart['quantity'],
                 'amount'            => $this->cart['amount'],
-                'start_date'        => $this->cart['start_date'],
+                'start_date'        => 0,
                 'payment_metod_id'  => $this->paymentMethodId,
                 'status'            => 'pending',
-                'payment_proof'     => $path,
             ];
 
             Log::info('oreder', ['message' => $pesanan]);
             // simpan ke database
             $order = Order::create($pesanan);
 
-            // send whatsapp
-            SendWhatsapp::dispatch($costumer->phone,"Berhasil Mengirim Pesanan dengan invoice : " . $order->invoice . 'silhkan tunggu pesanan di konfirmasi');
-
 
             // setelah proses create/update data
             session()->flash('success', 'Data berhasil dikirim.');
 
-
-            $this->reset([
-                'payment_proof',
-                'name',
-                'email',
-                'phone',
-                'invoice',
-                'order',
-                'cart',
-                'slot',
-                'selectedPriceId',
-            ]);
-
-            $this->slot = 1; // default slot 1
-            $this->order = null; // pastikan order kosong
-
-            // reset modal + tampilkan flash message
-            $this->reset(['payment_proof']);
-
-
-
-            // bisa juga close modal via event ke Alpine
-            $this->dispatch('close-payment-modal');
+            // redirect
+            return redirect()->route('payment.order', $order->invoice);
         } catch (Exception $e) {
-            Log::info('gagak', ['message' => $e->getMessage()]);
+            Log::error('Order confirmation failed', ['error' => $e->getMessage()]);
 
             session()->flash('error', 'Data Gagal dikirim.');
 
@@ -175,9 +244,10 @@ class BoxPaket extends Component
     }
 
     public function makeOrder()
-    {   
+    {
         $this->invoice = 'INV-' . strtoupper(uniqid());
         $this->order = collect($this->prices)->firstWhere('id', $this->selectedPriceId);
+        //  $this->dispatch('show-payment-modal');
     }
 
     public function updatedSlot($value)

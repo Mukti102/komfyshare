@@ -1,4 +1,4 @@
-<footer class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 overflow-hidden">
+<footer class="relative bg-dark text-gray-100 overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-5">
         <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60"
@@ -90,7 +90,7 @@
                                     class="fas fa-arrow-right mr-3 text-blue-400 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300"></i>
                                 <span class="group-hover:translate-x-2 transition-transform duration-300">Faq</span>
                             </a>
-                            <a href="term"
+                            <a href="/term"
                                 class="group flex items-center text-slate-300 hover:text-white transition-all duration-300">
                                 <i
                                     class="fas fa-arrow-right mr-3 text-blue-400 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300"></i>

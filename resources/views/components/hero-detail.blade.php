@@ -3,7 +3,7 @@
     <img src="{{asset('storage/'. $product->thumbnail)}}" alt=""
         class="absolute md:scale-[1.50]  scale-[1.40] -rotate-[10deg] top-10 md:top-0 -right-[5rem] z-20 ">
     <!-- Left Content -->
-    <div class="mx-auto px-6 lg:px-0 relative z-50">
+    <div class="mx-auto px-6 lg:px-0 relative z-30">
         <div class="min-h-screen relative overflow-hidden grid lg:grid-cols-2">
 
             <!-- Left Content -->
@@ -32,6 +32,6 @@
             </div>
         </div>
     </div>
-    <div class="absolute bottom-0 z-50 left-0 w-full h-32 md:h-52 bg-gradient-to-t from-black to-transparent">
+    <div class="absolute bottom-0 z-30 left-0 w-full h-32 md:h-52 bg-gradient-to-t from-black to-transparent">
     </div>
 </section>

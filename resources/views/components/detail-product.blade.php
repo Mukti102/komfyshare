@@ -51,7 +51,8 @@
 
         <!-- Pricing Card -->
         <div class="lg:col-span-1 h-max space-y-5">
-           @livewire('box-paket', ['prices' => $product->prices])
+           <livewire:box-paket :prices="$product->prices" />
+
            @livewire('box-group-list',['product' => $product])
         </div>
     </div>

@@ -42,8 +42,8 @@
                 $finalPrice = $price - ($price * $discount) / 100;
             @endphp
 
-            <div class="flex items-center justify-between mt-3">
-                <div class="flex gap-2 items-center text-gray-900">
+            <div class="flex md:flex-row flex-col items-start  md:items-center justify-between mt-3">
+                <div class="flex md:order-1 order-2 gap-2 items-center text-gray-900">
                     @if ($discount > 0)
                         <span class="text-xs line-through font-bold text-gray-600 dark:text-gray-600">
                             Rp.{{ number_format($price ?? 0, 0, ',', '.') }}
@@ -53,7 +53,7 @@
                         Rp.{{ number_format($finalPrice ?? 0, 0, ',', '.') }}
                     </span>
                 </div>
-                <span class="bg-blue-100 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-100">
+                <span class="bg-blue-100 md:order-2 order-1 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-100">
                     {{ $product->prices->first()->duration ?? '1 Bulan' }}
                 </span>
             </div>

@@ -5,16 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     {{-- logo dan favicon --}}
-    {{-- Favicon --}}
-    <link rel="icon" type="image/png" href="{{ asset('storage/'. setting('general.logo')) }}">
-    <link rel="apple-touch-icon" href="{{ asset('storage/'. setting('general.favicon')) }}">
+    <link rel="icon" type="image/png" href="{{ asset('storage/' . setting('general.logo')) }}">
+    <link rel="apple-touch-icon" href="{{ asset('storage/' . setting('general.favicon')) }}">
 
     {{-- Logo untuk share (Open Graph & Twitter) --}}
-    <meta property="og:title" content="{{setting('seo.title')}}">
-    <meta property="og:description" content="{{setting('seo.description')}}">
-    <meta property="og:image" content="{{ asset('storage/'. setting('general.logo')) }}">
-
+    <meta property="og:title" content="{{ setting('seo.title') }}">
+    <meta property="og:description" content="{{ setting('seo.description') }}">
+    <meta property="og:image" content="{{ asset('storage/' . setting('general.logo')) }}">
 
     <title>
         @hasSection('title')
@@ -37,26 +36,23 @@
 <body class="font-sans text-gray-900 bg-gray-50 antialiased">
     @include('partials.navbar')
 
+   
+
     <div>
         <x-alert />
-
         @yield('content')
     </div>
-    <!-- Back to Top Button -->
-    <button id="backToTop"
-        class="fixed bottom-8 z-[10000] right-8 bg-primary text-white p-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 invisible">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-        </svg>
-    </button>
+
+    <x-popup-support/>
 
     @include('partials.footer')
     @include('sweetalert::alert')
+
+    <!-- FIXED: Load includes.scripts first, then livewire -->
+    @include('includes.scripts')
+    @stack('scripts')
     @livewireScripts
+
 </body>
-
-@include('includes.scripts')
-@stack('scripts')
-
 
 </html>

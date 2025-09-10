@@ -55,7 +55,7 @@
 </div>
 
 {{-- mobile --}}
-<div class="md:hidden block mx-auto py-0 md:py-10 px-5 md:px-20 ">
+<div class="md:hidden  block mx-auto py-0 md:py-10 px-5 md:px-20 ">
     <div id="default-carousel" class="relative   md:h-80 h-60   w-full" data-carousel="slide">
         <!-- Carousel wrapper -->
         <div class="relative  overflow-hidden z-30  rounded-lg h-full">

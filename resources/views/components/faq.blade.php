@@ -36,7 +36,7 @@
     </div>
 
     {{-- Content --}}
-    <div class="relative z-50 max-w-4xl w-[90%] mx-auto text-center">
+    <div class="relative z-30 max-w-4xl w-[90%] mx-auto text-center">
         <h1 class="font-bold text-3xl  md:text-6xl leading-snug text-gray-800">
             Yuk, Kenali KomfyShare <br class="hidden md:block" /> Lebih Dekat!
         </h1>

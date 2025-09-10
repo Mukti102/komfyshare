@@ -27,20 +27,33 @@ class PaymentMetodsResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\FileUpload::make('logo')
-                    ->disk('public')
-                    ->directory('payment_method')
-                    ->required(),
-                Forms\Components\TextInput::make('owner')
+                Forms\Components\TextInput::make('code')
+                    ->label('Kode')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('nomor_rek')
-                    ->maxLength(255),
-                Forms\Components\FileUpload::make('image')
-                    ->label('Gambar No Rekening/Qris (Opsional)')
+                 Forms\Components\Select::make('category')
+                ->label('Kategory')
+                 ->options([
+                    'Virtual Account' => 'Virtual Account',
+                    'Emoney' => 'Emoney',
+                    'QRIS' => 'QRIS',
+                    'Retail' => 'Retail',
+                    'Pulsa' => 'Pulsa'
+                 ]),
+                Forms\Components\FileUpload::make('logo')
                     ->disk('public')
+                    ->imageEditor()
                     ->directory('payment_method')
-                    ->image(),
+                    ->required(),
+                // Forms\Components\TextInput::make('owner')
+                //     ->maxLength(255),
+                // Forms\Components\TextInput::make('nomor_rek')
+                //     ->maxLength(255),
+                // Forms\Components\FileUpload::make('image')
+                //     ->label('Gambar No Rekening/Qris (Opsional)')
+                //     ->disk('public')
+                //     ->directory('payment_method')
+                //     ->image(),
             ]);
     }
 
@@ -50,13 +63,10 @@ class PaymentMetodsResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('logo')
+                Tables\Columns\TextColumn::make('code')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('owner')
+                Tables\Columns\ImageColumn::make('logo')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nomor_rek')
-                    ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

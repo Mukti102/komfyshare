@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SendWhatsapp implements ShouldQueue
 {
@@ -13,48 +14,56 @@ class SendWhatsapp implements ShouldQueue
     protected $phone;
     protected $message;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct($phone, $message)
     {
         $this->phone   = $phone;
         $this->message = $message;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
+
+        $token = setting('wablas.token') ?? env('TOKEN_WABLAS');
+        $secret_key = setting('wablas.secret_key') ?? env('SECRET_KEY_WABLAS');
+        $baseUrl = setting('wablas.base_url') ?? env('BASE_URL_WABLAS');
+
         $phone = $this->normalizePhone($this->phone);
+        $message = $this->message;
 
-        Http::withHeaders([
-            // 'Authorization' => env('FONNTE_TOKEN'),
-            'Authorization' => 'GJu2qM8YKF47K8PC1b3u',
-        ])->post('https://api.fonnte.com/send', [
-            'target'  => $phone,
-            'message' => $this->message,
-        ]);
+        // URL encode the message
+        $message_encoded = urlencode($message);
+
+        // Build API URL
+        $api_url = "{$baseUrl}?token={$token}.{$secret_key}&phone={$phone}&message={$message_encoded}";
+
+        // Initialize cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        // Execute request
+        $response = curl_exec($ch);
+
+        // Check for errors
+        if (curl_errno($ch)) {
+            // echo "cURL Error: " . curl_error($ch);
+            Log::info('send whatsapp error',['message' => $ch]);
+        } else {
+            Log::info('send whatsapp error',['message' => json_decode($response, true)]);
+        }
+
     }
-
 
     private function normalizePhone(string $phone): string
     {
-        $phone = preg_replace('/\D/', '', $phone); 
+        $phone = preg_replace('/\D/', '', $phone);
 
         if (str_starts_with($phone, '0')) {
-            // 08123... -> 628123...
             $phone = '62' . substr($phone, 1);
-        } elseif (str_starts_with($phone, '62')) {
-            // sudah benar -> biarkan
-            $phone = $phone;
         } elseif (str_starts_with($phone, '+62')) {
-            // +628123 -> 628123
             $phone = ltrim($phone, '+');
-        } else {
-            // fallback: anggap sudah benar
-            $phone = $phone;
         }
 
         return $phone;

@@ -160,6 +160,17 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('productPrice.duration_day')
+                    ->label('Durasi Hari')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('start_date')
+                    ->label('Tanggal Awal')
+                    ->date('d F Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('end_date')
+                    ->label('Tanggal Akhir')
+                    ->date('d F Y')
+                    ->sortable(),
                 TextColumn::make('status')
                     ->badge() // tetap pakai badge untuk membuat kotak
                     ->color(fn($state) => match ($state) {
@@ -169,11 +180,6 @@ class OrderResource extends Resource
                         default => 'secondary',
                     })
                     ->sortable()
-                    ->searchable(),
-                Tables\Columns\ImageColumn::make('payment_proof')
-                    ->label('Bukti Pembayaran')
-                    ->url(fn($record) => asset('storage/' . $record->payment_proof), true) // buka di tab baru
-                    ->openUrlInNewTab()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')

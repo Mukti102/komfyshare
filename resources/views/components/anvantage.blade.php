@@ -43,7 +43,7 @@
 </style>
 @endpush
 
-<section class="bg-gray-50 mb-0">
+<section class="bg-gray-50 mb-10 md:mb-0">
     <div class="flex flex-col lg:flex-row gap-8 lg:gap-0    w-full md:py-12 lg:pb-10 px-4 lg:px-0 mx-auto items-center">
         <!-- Left - Floating Cards -->
         <div class="w-full  lg:w-[40%] h-96 lg:h-[300px] relative order-2 lg:order-1 hidden md:hidden sm:hidden lg:flex items-center justify-center z-0">
@@ -64,7 +64,7 @@
         </div>
 
         <!-- Right - Content -->
-        <div class="w-full lg:w-1/2 px-4 text-center lg:px-0 space-y-6 order-1 lg:order-2 flex flex-col justify-center relative z-50">
+        <div class="w-full lg:w-1/2 px-4 text-center lg:px-0 space-y-6 order-1 lg:order-2 flex flex-col justify-center relative z-30">
             <img src="{{asset('assets/komfybayarnya.png')}}" alt="">
             <p class="text-sm lg:text-lg text-gray-600  leading-relaxed">
                 Nikmati kemudahan bertransaksi dengan berbagai metode pembayaran yang nyaman dan terjangkau. Komfy Share mendukung pembayaran melalui DANA, QRIS, ShopeePay, dan OVO, sehingga Anda bisa memilih cara yang paling praktis sesuai kebutuhan.

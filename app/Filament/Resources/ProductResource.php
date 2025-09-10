@@ -71,7 +71,7 @@ class ProductResource extends Resource
                             ->relationship('prices')
                             ->schema([
                                 TextInput::make('duration')
-                                    ->label('Durasi')
+                                    ->label('Name')
                                     ->placeholder('Durasi (misal: 1 Bulan, 3 Bulan, 1 Tahun)')
                                     ->required(),
                                 TextInput::make('price')
@@ -80,6 +80,11 @@ class ProductResource extends Resource
                                     ->prefix('Rp ')
                                     ->numeric()
                                     ->required(),
+                                TextInput::make('duration_day')
+                                    ->label('Durasi')
+                                    ->placeholder('30')
+                                    ->suffix('Hari')
+                                    ->numeric(),
                             ])
                             ->columns(2),
                         Forms\Components\TextInput::make('discount')
@@ -96,6 +101,10 @@ class ProductResource extends Resource
                         Forms\Components\RichEditor::make('description')
                             ->label('Schema Berlangganan')
                             ->required()
+                            ->columnSpanFull(),
+                        Forms\Components\RichEditor::make('information')
+                            ->label('Informasi')
+                            ->nullable()
                             ->columnSpanFull(),
                     ])->columns(2)
             ]);

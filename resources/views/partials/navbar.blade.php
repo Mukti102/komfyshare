@@ -1,7 +1,7 @@
 <!-- Tambahkan di <head> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-<nav class="bg-dark fixed top-0 w-full z-[10000] shadow-lg">
+<nav class="bg-dark fixed top-0 w-full z-40 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->

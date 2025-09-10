@@ -53,7 +53,7 @@
      </style>
  @endpush
  <!-- Hero Section -->
- <section class="bg-dark min-h-screen relative overflow-hidden md:pb-32 pb-20">
+ <section class="bg-dark min-h-screen relative overflow-hidden md:pb-32  pb-20">
      <!-- Background Elements -->
      <div class="absolute inset-0">
          <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl floating-animation"></div>
@@ -62,11 +62,11 @@
          <div class="absolute bottom-20 left-1/4 w-40 h-40 bg-white/10 rounded-full blur-2xl floating-animation"></div>
      </div>
 
-     <div class="mx-auto md:pt-0 pt-24  px-6 lg:px-8 relative z-10">
-         <div class="flex flex-col  lg:flex-row items-center md:justify-between min-h-screen py-0 md:py-20">
+     <div class="mx-auto md:pt-0 pt-24   px-6 lg:px-8 relative z-10">
+         <div class="flex flex-col   lg:flex-row items-center md:justify-between md:min-h-screen h-[82vh]  py-0 md:py-20">
              <!-- Left Content -->
 
-             <div class="lg:w-1/2  lg:pl-12 ">
+             <div class="lg:w-1/2   lg:pl-12 ">
                  <div class="relative w-full">
                      <!-- Hero -->
                      <img class="w-full h-auto object-cover" src="{{ asset('assets/hero.png') }}" alt="">
@@ -84,7 +84,7 @@
 
 
              <!-- Right Content - Feature Cards -->
-             <div class="lg:w-1/2 mb-12 lg:mb-0  ">
+             <div class="lg:w-1/2 mb-0   lg:mb-0  ">
                  <div class="max-w-xl h-full  space-y-2">
                      <div class="md:mb-10 mb-2">
                          <h1

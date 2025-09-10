@@ -18,11 +18,19 @@ class Order extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function productPrice(){
+    public function productPrice()
+    {
         return $this->belongsTo(ProductPrice::class);
     }
 
-    public function paymentMethod(){
-        return $this->belongsTo(PaymentMetods::class);
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMetods::class, 'payment_metod_id');
     }
+
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date'   => 'datetime',
+    ];
 }

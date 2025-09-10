@@ -92,8 +92,37 @@ class Settings extends BaseSettings
                             TextInput::make('sosialMedia.facebook'),
                             TextInput::make('sosialMedia.instagram'),
                             TextInput::make('sosialMedia.whatsaap')
-                            ->placeholder('628***')
-                            ->tel(),
+                                ->placeholder('628***')
+                                ->tel(),
+                        ])->columns(2),
+                    Tabs\Tab::make('Popup')
+                        ->schema([
+                            FileUpload::make('popup.information')
+                                ->label('Gambar Popup Informasi')
+                                ->imageEditor()
+                                ->disk('public')
+                                ->directory('popup'),
+                            FileUpload::make('popup.costumer.support')
+                                ->label('Gambar Popup Costumer Support')
+                                ->imageEditor()
+                                ->disk('public')
+                                ->directory('popup'),
+                        ])->columns(2),
+                    Tabs\Tab::make('Secret Key')
+                        ->icon('heroicon-o-key')
+                        ->schema([
+                            TextInput::make('tokopay.api_key')
+                            ->label('TOKOPAY API KEY'),
+                            TextInput::make('tokopay.merchant_id')
+                            ->label('TOKOPAY MERCHANT ID'),
+                            TextInput::make('wablas.token')
+                            ->label('TOKEN WABLAS'),
+                            TextInput::make('wablas.secret_key')
+                            ->label('SECRET KEY WABLAS'),
+                            TextInput::make('wablas.base_url')
+                            ->label('BASE URL')
+                            ->placeholder('https://texas.wablas.com/api/send-message')
+                            ,
                         ])->columns(2),
                 ]),
         ];
