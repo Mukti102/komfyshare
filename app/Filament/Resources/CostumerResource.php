@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CostumerResource\Pages;
 use App\Filament\Resources\CostumerResource\RelationManagers;
+use App\Filament\Resources\CustomerResource\Pages\ViewCostumer;
 use App\Models\Costumer;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -22,7 +23,7 @@ class CostumerResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-     public static function getNavigationBadge(): ?string
+    public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
@@ -73,6 +74,12 @@ class CostumerResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('view')
+                    ->label('Lihat')
+                    ->button()
+                    ->color('primary')
+                    ->icon('heroicon-o-eye')
+                    ->url(fn(Costumer $record): string => static::getUrl('view', ['record' => $record])),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -95,6 +102,7 @@ class CostumerResource extends Resource
             'index' => Pages\ListCostumers::route('/'),
             'create' => Pages\CreateCostumer::route('/create'),
             'edit' => Pages\EditCostumer::route('/{record}/edit'),
+            'view' => ViewCostumer::route('/{record}')
         ];
     }
 }

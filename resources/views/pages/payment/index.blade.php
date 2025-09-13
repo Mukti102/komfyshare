@@ -274,9 +274,19 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Status</span>
+                                @if ($order->status == 'pending')
                                 <span class="px-2 py-1 bg-yellow-100 capitalize text-yellow-800 rounded-full text-xs font-medium">
                                     {{ $order->status ?? 'Pending' }}
                                 </span>
+                                @elseif ($order->status == 'completed')
+                                <span class="px-2 py-1 bg-green-100 capitalize text-green-800 rounded-full text-xs font-medium">
+                                    {{ $order->status ?? 'Pending' }}
+                                </span>
+                                @else
+                                <span class="px-2 py-1 bg-red-100 capitalize text-red-800 rounded-full text-xs font-medium">
+                                    {{ $order->status ?? 'Pending' }}
+                                </span>
+                                @endif
                             </div>
                         </div>
                     </div>

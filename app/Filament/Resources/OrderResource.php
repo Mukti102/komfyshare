@@ -149,6 +149,7 @@ class OrderResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('costumer.name')
+                    ->default(fn() => request()->get('costumer_id'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('product.title')

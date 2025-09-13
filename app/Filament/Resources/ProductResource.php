@@ -11,6 +11,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -59,8 +60,7 @@ class ProductResource extends Resource
                             ->required()
                             ->imageEditor()
                             ->disk('public')
-                            ->directory('thumbnails')
-                        ,
+                            ->directory('thumbnails'),
                         Forms\Components\FileUpload::make('image')
                             ->image()
                             ->imageEditor()
@@ -85,6 +85,7 @@ class ProductResource extends Resource
                                     ->placeholder('30')
                                     ->suffix('Hari')
                                     ->numeric(),
+                                Toggle::make('status')
                             ])
                             ->columns(2),
                         Forms\Components\TextInput::make('discount')
@@ -95,13 +96,12 @@ class ProductResource extends Resource
                         Forms\Components\Toggle::make('status')
                             ->helperText('Jika non-aktif, produk tidak akan muncul di halaman depan.')
                             ->required(),
-                        Forms\Components\TagsInput::make('priceDetails')
+                        Forms\Components\RichEditor::make('priceDetails')
                             ->label('Detail Harga')
                             ->required(),
                         Forms\Components\RichEditor::make('description')
                             ->label('Schema Berlangganan')
-                            ->required()
-                            ->columnSpanFull(),
+                            ->required(),
                         Forms\Components\RichEditor::make('information')
                             ->label('Informasi')
                             ->nullable()

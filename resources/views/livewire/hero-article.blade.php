@@ -65,7 +65,7 @@
 
 
      <div
-         class="h-full w-[90%] md:w-[70%] px-2 md:px-20  bg-gradient-to-r from-[30%] md:from-[40%]  from-black/80 to-transparent   relative z-50 flex items-center justify-center">
+         class="h-full w-[90%] md:w-[70%] px-2 md:px-20  bg-gradient-to-r from-[30%] md:from-[40%]  from-black/80 to-transparent   relative z-30 flex items-center justify-center">
          <div class="flex  flex-col lg:flex-row items-center justify-center h-full md:min-h-screen py-20">
              <!-- Right Content - Feature Cards -->
              <div class="w-[90%]">

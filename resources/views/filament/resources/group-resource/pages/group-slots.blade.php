@@ -3,12 +3,7 @@
         <!-- Header Section -->
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                    Slots untuk Group: {{ $record->name }}
-                </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Kelola slot pelanggan untuk grup ini
-                </p>
+                
             </div>
 
             <!-- Action Buttons -->
@@ -227,16 +222,24 @@
                 <label for="customer_select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Pilih Customer <span class="text-red-500">*</span>
                 </label>
-                <select id="customer_select" name="customer_id" wire:model.defer="selectedCustomerId"
-                    class="block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 shadow-sm transition-colors duration-200"
-                    required>
-                    <option class="text-white dark:text-white" value="">-- Pilih Customer --</option>
-                    {{-- You'll need to add this property to your Livewire component --}}
-                    @foreach ($customers as $customer)
-                        <option class="text-white dark:text-white" value="{{ $customer->id }}">{{ $customer->name }}
-                            ({{ $customer->email }})</option>
-                    @endforeach
-                </select>
+                <div class="flex gap-2">
+                    <select id="customer_select" name="customer_id" wire:model.defer="selectedCustomerId"
+                        class="block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 shadow-sm transition-colors duration-200"
+                        required>
+                        <option class="text-white dark:text-white" value="">-- Pilih Customer --</option>
+                        {{-- You'll need to add this property to your Livewire component --}}
+                        @foreach ($customers as $customer)
+                            <option class="text-white dark:text-white" value="{{ $customer->id }}">
+                                {{ $customer->name }}
+                                ({{ $customer->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-filament::button tag="a" href="{{ url('/admin/costumers/create') }}" color="info"
+                        icon="heroicon-o-plus">
+                        Customer
+                    </x-filament::button>
+                </div>
             </div>
             <div>
                 <label for="order_select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -297,14 +300,14 @@
                     <option class="text-white dark:text-white" value="">-- Pilih Customer --</option>
                     {{-- You'll need to add this property to your Livewire component --}}
                     @foreach ($customers as $customer)
-                        <option {{ $editCustomerId == $customer->id ? 'selected' : '' }}
-                            value="{{ $customer->id }}">{{ $customer->name }} ({{ $customer->email }})</option>
+                        <option {{ $editCustomerId == $customer->id ? 'selected' : '' }} value="{{ $customer->id }}">
+                            {{ $customer->name }} ({{ $customer->email }})</option>
                     @endforeach
                 </select>
             </div>
             <div>
                 <label for="order_select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Pilih Customer <span class="text-red-500">*</span>
+                    Pilih Invoice Order <span class="text-red-500">*</span>
                 </label>
                 <select id="order_select" name="order_id" wire:model.defer="selectedOrderId"
                     class="block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 focus:border-blue-500 focus:ring-blue-500 shadow-sm transition-colors duration-200"
@@ -312,7 +315,8 @@
                     <option class="text-white dark:text-white" value="">-- Pilih Invoice --</option>
                     {{-- You'll need to add this property to your Livewire component --}}
                     @foreach ($orders as $order)
-                        <option {{$selectedOrderId == $order->id ? 'selected' : ''}} class="text-white dark:text-white" value="{{ $order->id }}">{{ $order->invoice }}
+                        <option {{ $selectedOrderId == $order->id ? 'selected' : '' }}
+                            class="text-white dark:text-white" value="{{ $order->id }}">{{ $order->invoice }}
                         </option>
                     @endforeach
                 </select>

@@ -5,7 +5,7 @@
             @if ($status == 'Unpaid')
             <div class="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
             <span class="text-yellow-600 font-medium">{{ 'Belum Bayar' }}</span>
-            @elseif ($status == 'Paid')
+            @elseif ($status == 'Completed')
             <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <span class="text-green-600 font-medium">{{ 'Sudah Bayar' }}</span>
             @else

@@ -21,20 +21,13 @@ class PaymentController extends Controller
 
     public function index($invoice)
     {
-        $order = Order::with('paymentMethod')->where('invoice', $invoice)->first();
+        $order = Order::with('paymentMethod', 'product')->where('invoice', $invoice)->first();
         $paymentMethod = $order->paymentMethod;
         $data = $this->tokopay->createOrder($paymentMethod->code, $order->invoice, $order->amount);
-        // $data = [
-        //     "data" => [
-        //         "nomor_va" => "8578330274425713",
-        //         "pay_url" => "https://pay.tokopay.id/?token=xxx",
-        //         "panduan_pembayaran" => "8578330274425713",
-        //         "total_bayar" => "20000",
-        //         "total_diterima" => "19000",
-        //         "trx_id" => "T230404OTMP000001",
-        //     ],
-        //     "status" => "Success"
-        // ];
+        if (!isset($data['data']) || $data['status'] == false) {
+            return redirect()->route('product.show', $order->product->id)->with('error','Gagal Memproses Order');
+        }
+
         return view('pages.payment.index', compact('data', 'order'));
     }
 
@@ -42,11 +35,14 @@ class PaymentController extends Controller
     {
         Log::info('Tokopay Webhook:', ['data' => $request->all()]);
 
-        $reffId    = $request->input('reff_id');
-        $reference = $request->input('reference');
-        $status    = $request->input('status');
-        $signature = $request->input('signature');
-        $data      = $request->input('data');
+        $reffId    = $request['reff_id'];
+        $reference = $request['reference'];
+        $status    = $request['status'];
+        $signature = $request['signature'];
+        $data      = $request['data'];
+
+
+
 
         // Validasi signature
         $expected = md5(config('tokopay.merchant_id') . ':' . config('tokopay.api_key') . ':' . $reffId);
@@ -55,28 +51,45 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Invalid signature'], 403);
         }
 
-        $order = Order::with(['customer', 'product', 'paymentMethod'])->where('invoice', $reffId)->first();
+        $order = Order::with(['costumer', 'product', 'paymentMethod', 'productPrice'])->where('invoice', $reffId)->first();
 
         if (!$order) {
             Log::error("Order not found for invoice: {$reffId}");
             return response()->json(['error' => 'Order not found'], 404);
         }
 
+
         switch ($status) {
             case 'Success':
-            case 'Complete':
-                $duration  = $order->productPrice->duration_day;
+                $duration  = (int) $order->productPrice->duration_day;
                 $end_date  = now()->addDays($duration)->toDateString();
+
 
                 $order->update([
                     'status'       => 'completed',
                     'reference'    => $reference,
-                    'payment_data' => json_encode($data),
+                    'payment_data' => json_encode($request->all()),
                     'start_date'   => now()->toDateString(),
                     'end_date'     => $end_date,
                 ]);
 
-                $this->sendMessageWhatsapp($order->customer, $order);
+
+                $this->sendMessageWhatsapp($order->costumer, $order);
+                break;
+            case 'Completed':
+                $duration  = (int) $order->productPrice->duration_day;
+                $end_date  = now()->addDays($duration)->toDateString();
+
+
+                $order->update([
+                    'status'       => 'completed',
+                    'reference'    => $reference,
+                    'payment_data' => json_encode($request->all()),
+                    'start_date'   => now()->toDateString(),
+                    'end_date'     => $end_date,
+                ]);
+
+                $this->sendMessageWhatsapp($order->costumer, $order);
                 break;
 
             case 'Failed':
@@ -130,7 +143,7 @@ KomfyShare";
             [
                 $customer->name,
                 $order->product->title,
-                $order->slot,
+                $order->quantity,
                 $order->invoice,
                 $order->start_date->format('d/m/Y'),
                 $order->end_date->format('d/m/Y'),
@@ -158,11 +171,11 @@ KomfyShare";
                 $order->product->title,
                 $order->quantity,
                 number_format($order->amount, 0, ',', '.'),
-                $order->customer->name,
-                $order->customer->email,
-                $order->customer->phone,
+                $order->costumer->name,
+                $order->costumer->email,
+                $order->costumer->phone,
                 $order->paymentMethod->name,
-                $order->reference,
+                $order->invoice,
                 $order->referral ?? '-',
                 Carbon::now()->format('d/m/Y H:i:s'),
             ],
@@ -175,5 +188,25 @@ KomfyShare";
         foreach ($admins as $admin) {
             SendWhatsapp::dispatch($admin->phone, $adminMessage);
         }
+    }
+
+
+    public function createSlot()
+    {
+        // $product = $record->product; // relasi order -> product
+        // $groups = $product->groups;  // relasi product -> groups (Collection)
+
+        // if ($groups->isNotEmpty()) {
+        //     // pilih group pertama yang masih punya slot kosong
+        //     $group = $groups->firstWhere(fn($g) => $g->slots()->count() < $g->max_slot);
+
+        //     if ($group) {
+        //         $group->slots()->create([
+        //             'order_id'    => $record->id,
+        //             'group_id'    => $group->id,
+        //             'costumer_id' => $record->costumer_id,
+        //         ]);
+        //     }
+        // }
     }
 }

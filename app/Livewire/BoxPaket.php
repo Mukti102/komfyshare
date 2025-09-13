@@ -37,17 +37,10 @@ class BoxPaket extends Component
     public $shareModal = false;
     public $coupon;
     public $discountPercentase = 0;
-    public $discountRupiah = 0;
+    public $discountRupiah = null;
     public $codes = [];
     public $countryCode;
 
-    // Di BoxPaket.php
-    public $testMessage = 'Initial';
-
-    public function testClick()
-    {
-        $this->testMessage = 'Button clicked at ' . now();
-    }
 
 
     public function setShareModal()
@@ -57,7 +50,7 @@ class BoxPaket extends Component
 
     public function mount($prices)
     {
-        $this->prices = $prices;
+        $this->prices = $prices->where('status', true);
         $this->paymentMethods = PaymentMetods::all();
         $this->paymentMethodId = $this->paymentMethods->first()->id;
         // ✅ Panggil RestCountries API dari server
@@ -121,7 +114,7 @@ class BoxPaket extends Component
 
     public function checkCoupon()
     {
-        $coupon = Coupon::where('code', $this->coupon)->first();
+        $coupon = Coupon::with('products')->where('code', $this->coupon)->first();
 
         if (!$coupon) {
             session()->flash('error', 'Kupon tidak ditemukan');
@@ -143,9 +136,16 @@ class BoxPaket extends Component
             return;
         }
 
+        if (!$coupon->products->contains('id', $this->order->product->id)) {
+            // Kupon tidak bisa dipakai untuk produk ini 
+            session()->flash('error', 'Kupon ini tidak berlaku untuk produk yang dipilih.');
+            return;
+        }
+
+
         // Potongan harga
         $this->discountPercentase = (float) $coupon->percentase_discount;
-
+        $this->discountRupiah = (int) $coupon->rupiah_discount;
         // Decrement stock hanya jika kupon valid
         $coupon->decrement('sisa_stock');
 
@@ -173,13 +173,14 @@ class BoxPaket extends Component
     public function finalPrice($price, $discount = null)
     {
         $discount = $discount ??  $price->product->discount ?? 0;
-        return $this->normalPrice($price) - ($this->normalPrice($price) * $discount / 100);
+        return $this->normalPrice($price) - ($this->normalPrice($price) * $discount / 100) - $this->discountRupiah;
     }
 
     // Hitung total harga * slot
     public function totalPrice($price, $discount = 0)
     {
-        $resultDiscountPercentase = (float) $discount +  (float) $this->discountPercentase;
+        $percentaseDiscount = $this->discountRupiah ? 0 : (float) $this->discountPercentase;
+        $resultDiscountPercentase = (float) $discount +  $percentaseDiscount;
         return $this->finalPrice($price, $resultDiscountPercentase) * ($this->slot ?? 1);
     }
 

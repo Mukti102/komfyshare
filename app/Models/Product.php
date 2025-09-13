@@ -10,10 +10,10 @@ class Product extends Model
 
     protected $casts = [
         'listOfBenefits' => 'array',
-        'priceDetails' => 'array',
     ];
 
-    public function groups(){
+    public function groups()
+    {
         return $this->hasMany(Group::class);
     }
 
@@ -22,6 +22,12 @@ class Product extends Model
     {
         return $this->hasMany(ProductPrice::class);
     }
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class, 'coupon_product');
+    }
+
 
     public function category()
     {

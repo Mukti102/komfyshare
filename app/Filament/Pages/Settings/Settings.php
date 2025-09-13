@@ -95,34 +95,53 @@ class Settings extends BaseSettings
                                 ->placeholder('628***')
                                 ->tel(),
                         ])->columns(2),
-                    Tabs\Tab::make('Popup')
+                    Tabs\Tab::make('Popup Informasi')
                         ->schema([
                             FileUpload::make('popup.information')
                                 ->label('Gambar Popup Informasi')
                                 ->imageEditor()
                                 ->disk('public')
-                                ->directory('popup'),
+                                ->directory('popup/information'),
+                            TextInput::make('popu.information.link')
+                                ->label('Link Gambar')
+                                ->nullable()
+                        ])->columns(2),
+                    Tabs\Tab::make('Popup Customer Support')
+                        ->schema([
                             FileUpload::make('popup.costumer.support')
                                 ->label('Gambar Popup Costumer Support')
                                 ->imageEditor()
                                 ->disk('public')
-                                ->directory('popup'),
+                                ->directory('popup/support'),
+                            Repeater::make('popup.support.type')
+                                ->schema([
+                                    TextInput::make('name_support')
+                                        ->label('Nama Layanan Support'),
+                                    TextInput::make('link_support')
+                                        ->label('Link Layanan Support'),
+                                    FileUpload::make('image_support')
+                                        ->label('Gambar Layanan Support')
+                                        ->maxSize(2024)
+                                        ->disk('public')
+                                        ->imageEditor()
+                                        ->directory('poster/support'),
+                                ])
+
                         ])->columns(2),
                     Tabs\Tab::make('Secret Key')
                         ->icon('heroicon-o-key')
                         ->schema([
                             TextInput::make('tokopay.api_key')
-                            ->label('TOKOPAY API KEY'),
+                                ->label('TOKOPAY SECRET KEY'),
                             TextInput::make('tokopay.merchant_id')
-                            ->label('TOKOPAY MERCHANT ID'),
+                                ->label('TOKOPAY MERCHANT ID'),
                             TextInput::make('wablas.token')
-                            ->label('TOKEN WABLAS'),
+                                ->label('TOKEN WABLAS'),
                             TextInput::make('wablas.secret_key')
-                            ->label('SECRET KEY WABLAS'),
+                                ->label('SECRET KEY WABLAS'),
                             TextInput::make('wablas.base_url')
-                            ->label('BASE URL')
-                            ->placeholder('https://texas.wablas.com/api/send-message')
-                            ,
+                                ->label('BASE URL')
+                                ->placeholder('https://texas.wablas.com/api/send-message'),
                         ])->columns(2),
                 ]),
         ];

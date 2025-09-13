@@ -32,5 +32,7 @@ class Order extends Model
     protected $casts = [
         'start_date' => 'datetime',
         'end_date'   => 'datetime',
+        'payment_data' => 'array',
+
     ];
 }

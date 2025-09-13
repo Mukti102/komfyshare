@@ -45,14 +45,22 @@ class CouponResource extends Resource
                             ->suffix('%')
                             ->required()
                             ->maxLength(255),
-                        // Forms\Components\TextInput::make('rupiah_discount')
-                        //     ->prefix('Rp')
-                        //     ->maxLength(255),
+                        Forms\Components\TextInput::make('rupiah_discount')
+                            ->prefix('Rp')
+                            ->maxLength(255),
+                        Forms\Components\DatePicker::make('expired_date')
+                            ->label('Tanggal Batas Akhir'),
                         Forms\Components\Toggle::make('status')
                             ->helperText('Jika No Active Maka Kupon Tidak Bisa Di Gunakan')
                             ->required(),
-                        Forms\Components\DatePicker::make('expired_date')
-                            ->label('Tanggal Batas Akhir'),
+                        Forms\Components\CheckboxList::make('products')
+                            ->label('Produk yang bisa pakai kupon')
+                            ->relationship('products', 'title') // asumsi field 'title' di Product
+                            ->columns(3) // biar tampil 2 kolom
+                            ->columnSpanFull()
+                            ->bulkToggleable(), // ini yang bikin ada "Check All"
+
+
                         Forms\Components\Textarea::make('description')
                             ->required()
                             ->columnSpanFull(),
@@ -67,6 +75,7 @@ class CouponResource extends Resource
                 Tables\Columns\TextColumn::make('code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('stock')
+                    ->label('stock Awal')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sisa_stock')

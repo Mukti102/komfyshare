@@ -9,11 +9,11 @@
                 Invoice #{{ $record->invoice }}
             </x-slot>
             <x-slot name="headerEnd">
-                @if ($record->status == 'Completed')
+                @if ($record->status == 'completed')
                     <x-filament::badge color="success" size="lg">
                         {{ ucfirst($record->status) }}
                     </x-filament::badge>
-                @elseif ($record->status == 'Pending')
+                @elseif ($record->status == 'pending')
                     <x-filament::badge color="warning" size="lg">
                         {{ ucfirst($record->status) }}
                     </x-filament::badge>
@@ -39,7 +39,7 @@
                         <div class="space-y-4">
                             <x-filament::card color="info">
                                 <div class="p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
+                                    <div class="flex gap-2 items-center space-x-3 mb-3">
                                         <x-filament::icon icon="heroicon-o-user" class="w-5 h-5 text-primary-600" />
                                         <h4 class="font-medium text-gray-900 dark:text-white">Customer</h4>
                                     </div>
@@ -51,7 +51,7 @@
 
                             <x-filament::card>
                                 <div class="p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
+                                    <div class="flex gap-2 items-center space-x-3 mb-3">
                                         <x-filament::icon icon="heroicon-o-cube" class="w-5 h-5 text-purple-600" />
                                         <h4 class="font-medium text-gray-900 dark:text-white">Produk</h4>
                                     </div>
@@ -66,7 +66,7 @@
                         <div class="space-y-4">
                             <x-filament::card class="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border-emerald-200 dark:border-emerald-700">
                                 <div class="p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
+                                    <div class="flex gap-2 items-center space-x-3 mb-3">
                                         <x-filament::icon icon="heroicon-o-banknotes" class="w-5 h-5 text-emerald-600" />
                                         <h4 class="font-medium text-emerald-900 dark:text-emerald-100">Total Harga</h4>
                                     </div>
@@ -78,11 +78,11 @@
 
                             <x-filament::card>
                                 <div class="p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
+                                    <div class="flex gap-2 items-center space-x-3 mb-3">
                                         <x-filament::icon icon="heroicon-o-clock" class="w-5 h-5 text-orange-600" />
                                         <h4 class="font-medium text-gray-900 dark:text-white">Durasi</h4>
                                     </div>
-                                    <div class="flex items-center space-x-2">
+                                    <div class="flex gap-2 items-center space-x-2">
                                         <p class="text-lg font-semibold text-gray-900 dark:text-white">
                                             {{ $record->productPrice->duration_day }}
                                         </p>
@@ -96,23 +96,7 @@
                     </div>
                 </x-filament::section>
 
-                <!-- Payment Response -->
-                @if ($record->payment_data)
-                <x-filament::section icon="heroicon-o-document-text" icon-color="warning">
-                    <x-slot name="heading">
-                        Response Payment
-                    </x-slot>
-                    <x-slot name="description">
-                        Data respons dari payment gateway
-                    </x-slot>
-
-                    <x-filament::card class="bg-gray-900 dark:bg-gray-950 border-gray-700">
-                        <div class="p-4">
-                            <pre class="text-sm text-gray-100 dark:text-gray-300 whitespace-pre-wrap overflow-x-auto font-mono">{{ json_encode(json_decode($record->payment_data), JSON_PRETTY_PRINT) }}</pre>
-                        </div>
-                    </x-filament::card>
-                </x-filament::section>
-                @endif
+               
             </div>
 
             <!-- Sidebar -->
@@ -157,7 +141,7 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="space-y-2">
                                          <x-filament::badge color="info">
-                                            Tanggal Berakhir
+                                            Tanggal Mulai
                                         </x-filament::badge>
                                         <p class="text-sm font-semibold text-green-900 dark:text-green-100">
                                             {{ $record->start_date->format('d M Y') }}
@@ -171,11 +155,11 @@
                             <div class="p-4">
                                 <div class="flex items-center space-x-3">
                                     <div  class="space-y-2">
-                                        <x-filament::badge>
+                                        <x-filament::badge color="danger">
                                             Tanggal Berakhir
                                         </x-filament::badge>
                                         <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                                            {{ $record->start_date->addDays($record->productPrice->duration_day)->format('d M Y') }}
+                                            {{ $record->end_date ? $record->end_date->format('d M Y') : 'Tidak Ada' }}
                                         </p>
                                     </div>
                                 </div>
@@ -195,11 +179,11 @@
                             <!-- Status -->
                             <div class="flex items-center justify-between">
                                 <span class="text-sm font-medium text-blue-700 dark:text-blue-300">Status:</span>
-                                @if ($record->status == 'Completed')
+                                @if ($record->status == 'completed')
                                     <x-filament::badge color="success">
                                         {{ ucfirst($record->status) }}
                                     </x-filament::badge>
-                                @elseif ($record->status == 'Pending')
+                                @elseif ($record->status == 'pending')
                                     <x-filament::badge color="warning">
                                         {{ ucfirst($record->status) }}
                                     </x-filament::badge>
@@ -213,7 +197,7 @@
                             <!-- Duration -->
                             <div class="flex items-center justify-between">
                                 <span class="text-sm font-medium text-blue-700 dark:text-blue-300">Durasi:</span>
-                                <div class="flex items-center space-x-1">
+                                <div class="flex items-center gap-2 space-x-2">
                                     <span class="text-sm font-semibold text-blue-900 dark:text-blue-100">
                                         {{ $record->productPrice->duration_day }}
                                     </span>
@@ -233,7 +217,26 @@
                         </div>
                     </x-filament::card>
                 </x-filament::section>
+                
+                
+                     <!-- Payment Response -->
+                @if ($record->payment_data)
+                <x-filament::section icon="heroicon-o-document-text" icon-color="warning">
+                    <x-slot name="heading">
+                        Response Payment
+                    </x-slot>
+                    <x-slot name="description">
+                        Data respons dari payment gateway
+                    </x-slot>
 
+                    <x-filament::card class="bg-gray-900 dark:bg-gray-950 border-gray-700">
+                        <div class="p-4">
+                            <pre class="text-sm text-gray-100 dark:text-gray-300 whitespace-pre-wrap overflow-x-auto font-mono">{{ json_encode(json_decode($record->payment_data), JSON_PRETTY_PRINT) }}</pre>
+                        </div>
+                    </x-filament::card>
+                </x-filament::section>
+                @endif
+                
             </div>
         </div>
     </div>
