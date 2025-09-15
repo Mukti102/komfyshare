@@ -18,15 +18,15 @@
                 <div class="ml-10 flex items-baseline space-x-8">
                     <a href="/"
                         class="text-white hover:text-primary px-3 py-2 text-sm font-medium transition-colors">Beranda</a>
-                    <a href="#benefit"
+                    <a href="/#benefit"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white ">Keunggulan
                         Kami</a>
-                    <a href="#stepByStep"
+                    <a href="/#stepByStep"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white ">Cara
                         Langganan</a>
-                    <a href="#service"
+                    <a href="/#service"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white">Layanan</a>
-                    <a href="#faq"
+                    <a href="/#faq"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white">FAQ</a>
                     <a href="https://wa.me/{{ setting('general.phone') }}" target="_blank"
                         class=" hover:text-primary px-3 py-2 text-sm font-medium transition-colors text-white">Testimoni</a>
@@ -138,15 +138,15 @@
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
                 <a href="/"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary">Beranda</a>
-                <a href="#benefit"
+                <a href="/#benefit"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary  {{ request()->is('about*') ? 'bg-primary text-white rounded-lg' : '' }}">Keunggulan
                     Kami</a>
-                <a href="#stepByStep"
+                <a href="/#stepByStep"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary  {{ request()->is('majalah*') ? 'bg-primary text-white rounded-lg' : '' }}">Cara
                     Langganan</a>
-                <a href="#service"
+                <a href="/#service"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary {{ request()->is('programs*') ? 'bg-primary text-white rounded-lg' : '' }} ">Layanan</a>
-                <a href="#faq"
+                <a href="/#faq"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary {{ request()->is('programs*') ? 'bg-primary text-white rounded-lg' : '' }} ">FAQ</a>
                 <a href="https://wa.me/{{ setting('general.phone') }}"
                     class="block px-3 py-2 text-base font-medium transition-colors hover:text-primary {{ request()->is('programs*') ? 'bg-primary text-white rounded-lg' : '' }} ">Testimoni</a>

@@ -31,19 +31,22 @@
     @stack('styles')
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-ijipnLpG.css') }}"> --}}
+    {{-- <script type="module" src="{{ asset('build/assets/app-7Q3XEITw.js') }}"></script> --}}
+
 </head>
 
 <body class="font-sans text-gray-900 bg-gray-50 antialiased">
     @include('partials.navbar')
 
-   
+
 
     <div>
         <x-alert />
         @yield('content')
     </div>
 
-    <x-popup-support/>
+    <x-popup-support />
 
     @include('partials.footer')
     @include('sweetalert::alert')

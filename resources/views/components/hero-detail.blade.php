@@ -19,7 +19,7 @@
                     </h1>
 
                     <p class="text-white/90 text-lg lg:text-3xl mb-8 leading-relaxed">
-                        Nikmati Drama & Film Eksklusif, Bebas Iklan! WeTV VIP 1 Bulan cuma Rp 28.500
+                        {{$product->tagline}}
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4">

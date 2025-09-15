@@ -27,7 +27,6 @@ class CouponResource extends Resource
                 Section::make('Kupon')
                     ->description('Kupon Discount Untuk Mendapatkan Potongan Harga')
                     ->schema([
-
                         Forms\Components\TextInput::make('code')
                             ->helperText('Disarankan Menggukan Huruf Kapital')
                             ->required()

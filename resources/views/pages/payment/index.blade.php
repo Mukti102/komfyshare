@@ -199,6 +199,11 @@
                                 <div class="prose max-w-none text-gray-700">
                                     {!! $data['data']['panduan_pembayaran'] !!}
                                 </div>
+                                {{-- NB --}}
+                                <div class="mt-4 p-4 bg-yellow-50 border-l-4 md:shadow-md shadow-sm border-yellow-400 text-yellow-800 rounded">
+                                    <strong>NB:</strong> Komfyshare akan mengonfirmasi pesanan Anda melalui nomor WhatsApp
+                                    yang Anda cantumkan.
+                                </div>
                             </div>
                         @endif
                     </div>
@@ -227,7 +232,7 @@
                     </div>
 
                     <!-- Payment Status -->
-                   @livewire('check-status',['data' => $data,'order' => $order])
+                    @livewire('check-status', ['data' => $data, 'order' => $order])
 
                     <!-- Payment Method Info -->
                     <div class="bg-white rounded-xl md:shadow-lg shadow-md p-6">
@@ -275,17 +280,20 @@
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Status</span>
                                 @if ($order->status == 'pending')
-                                <span class="px-2 py-1 bg-yellow-100 capitalize text-yellow-800 rounded-full text-xs font-medium">
-                                    {{ $order->status ?? 'Pending' }}
-                                </span>
+                                    <span
+                                        class="px-2 py-1 bg-yellow-100 capitalize text-yellow-800 rounded-full text-xs font-medium">
+                                        {{ $order->status ?? 'Pending' }}
+                                    </span>
                                 @elseif ($order->status == 'completed')
-                                <span class="px-2 py-1 bg-green-100 capitalize text-green-800 rounded-full text-xs font-medium">
-                                    {{ $order->status ?? 'Pending' }}
-                                </span>
+                                    <span
+                                        class="px-2 py-1 bg-green-100 capitalize text-green-800 rounded-full text-xs font-medium">
+                                        {{ $order->status ?? 'Pending' }}
+                                    </span>
                                 @else
-                                <span class="px-2 py-1 bg-red-100 capitalize text-red-800 rounded-full text-xs font-medium">
-                                    {{ $order->status ?? 'Pending' }}
-                                </span>
+                                    <span
+                                        class="px-2 py-1 bg-red-100 capitalize text-red-800 rounded-full text-xs font-medium">
+                                        {{ $order->status ?? 'Pending' }}
+                                    </span>
                                 @endif
                             </div>
                         </div>
@@ -295,7 +303,8 @@
                     <div class="bg-gradient-to-br from-purple-50 to-purple-100 md:shadow-lg shadow-md rounded-xl p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Need Help?</h3>
                         <p class="text-gray-600 text-sm mb-4">Contact our support team if you encounter any issues.</p>
-                        <a href="https://wa.me/{{ setting('sosialMedia.whatsaap') }}" class="text-purple-600 hover:text-purple-700 font-medium text-sm flex items-center gap-1">
+                        <a href="https://wa.me/{{ setting('sosialMedia.whatsaap') }}"
+                            class="text-purple-600 hover:text-purple-700 font-medium text-sm flex items-center gap-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-2.508-.36l-4.75 1.238 1.238-4.75A8.955 8.955 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8z">
@@ -348,8 +357,6 @@
                 }).showToast();
             });
         }
-
-        
     </script>
 
 @endsection

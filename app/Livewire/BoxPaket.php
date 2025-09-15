@@ -50,7 +50,7 @@ class BoxPaket extends Component
 
     public function mount($prices)
     {
-        $this->prices = $prices->where('status', true);
+        $this->prices = $prices;
         $this->paymentMethods = PaymentMetods::all();
         $this->paymentMethodId = $this->paymentMethods->first()->id;
         // ✅ Panggil RestCountries API dari server
@@ -61,12 +61,22 @@ class BoxPaket extends Component
         if ($response->ok()) {
             $this->codes = collect($response->json())
                 ->filter(fn($c) => isset($c['idd']['root'])) // ambil hanya yg ada kode telp
-                ->map(fn($c) => [
-                    'code' => $c['idd']['root'] . ($c['idd']['suffixes'][0] ?? ''),
-                    'label' => $c['cca2'] . ' ',
-                ])
+                ->map(function ($c) {
+                    $iso2 = strtoupper($c['cca2']);
+
+                    // konversi ISO2 ke emoji flag
+                    $flag = implode('', array_map(function ($char) {
+                        return mb_convert_encoding('&#' . (127397 + ord($char)) . ';', 'UTF-8', 'HTML-ENTITIES');
+                    }, str_split($iso2)));
+
+                    return [
+                        'code'  => $c['idd']['root'] . ($c['idd']['suffixes'][0] ?? ''),
+                        'label' => $flag . ' ' . ($c['name']['common'] ?? $iso2),
+                    ];
+                })
                 ->values()
                 ->all();
+
             $this->countryCode = '+62';
         }
     }
@@ -147,7 +157,6 @@ class BoxPaket extends Component
         $this->discountPercentase = (float) $coupon->percentase_discount;
         $this->discountRupiah = (int) $coupon->rupiah_discount;
         // Decrement stock hanya jika kupon valid
-        $coupon->decrement('sisa_stock');
 
         session()->flash('success', 'Kupon berhasil digunakan');
     }
@@ -187,7 +196,9 @@ class BoxPaket extends Component
 
 
     public function confirmation()
-    {
+    {   
+        $coupon = Coupon::with('products')->where('code', $this->coupon)->first();
+
         try {
 
             if (!$this->cart) {
@@ -226,6 +237,9 @@ class BoxPaket extends Component
 
             // setelah proses create/update data
             session()->flash('success', 'Data berhasil dikirim.');
+
+            $coupon->decrement('sisa_stock', 1);
+
 
             // redirect
             return redirect()->route('payment.order', $order->invoice);

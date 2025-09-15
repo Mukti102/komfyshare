@@ -89,7 +89,7 @@ class Settings extends BaseSettings
                         ]),
                     Tabs\Tab::make('Sosial Media')
                         ->schema([
-                            TextInput::make('sosialMedia.facebook'),
+                            TextInput::make('sosialMedia.tiktok'),
                             TextInput::make('sosialMedia.instagram'),
                             TextInput::make('sosialMedia.whatsaap')
                                 ->placeholder('628***')

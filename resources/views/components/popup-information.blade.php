@@ -14,7 +14,7 @@
         </button>
 
         @if (setting('popu.information.link'))
-            <a href="{{ setting('popu.information.link') }}">
+            <a href="{{ setting('popu.information.link') }}" target="_blank" rel="noopener noreferrer">
                 <img src="{{ 'storage/' . setting('popup.information') }}"
                     class="w-full rounded-xl h-full object-contain" alt="">
             </a>

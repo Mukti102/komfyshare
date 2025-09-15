@@ -35,7 +35,7 @@
             </div>
 
             <!-- Tab Content -->
-            <div class="prose p-3 md:p-5 pt-0 pb-7 md:text-base text-xs max-w-none text-gray-900 dark:prose-invert">
+            <div class="prose p-3 md:p-5 pt-0 pb-7 md:text-base text-xs max-w-none text-gray-900 dark:prose-gray-900">
                 <div x-show="tab === 'skema'" x-transition>
                     {!! $product->description !!}
                 </div>

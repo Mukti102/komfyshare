@@ -1,3 +1,7 @@
+@php
+    use App\Services\StringHelper;
+@endphp
+
 <div
     class="bg-gray-50 backdrop-blur-xl border-2 border-primary/50 rounded-3xl shadow-2xl hover:border-primary/80 hover:shadow-primary/20 transition-all duration-500 group overflow-hidden relative">
 
@@ -36,14 +40,15 @@
                     @foreach ($group->slots ?? [] as $slot)
                         <li
                             class="flex items-center justify-between px-3 py-1 bg-green-700 dark:bg-green-600 rounded-lg">
-                            <span class="font-medium text-gray-100">{{ optional($slot->costumer)->name ?? '-' }}</span>
+                            <span class="font-medium text-gray-100">
+                                {{ StringHelper::censorName(optional($slot->costumer)->name) }}
+                            </span>
                             <span class="text-green-100 text-xs font-semibold">Terisi</span>
                         </li>
                     @endforeach
 
                     @for ($i = $slotCount; $i < $maxSlot; $i++)
-                        <li
-                            class="flex items-center justify-between px-3 py-1 bg-gray-300 dark:bg-gray-300 rounded-lg">
+                        <li class="flex items-center justify-between px-3 py-1 bg-gray-300 dark:bg-gray-300 rounded-lg">
                             <span class="font-medium text-gray-500 dark:text-gray-500">- Tersedia -</span>
                             <span class="text-gray-500 text-xs italic">Kosong</span>
                         </li>
@@ -57,7 +62,6 @@
 
     <div class="p-4">
         <a href="/groups"
-            
             class="w-full flex text-center justify-center bg-primary text-gray-100 font-bold px-6 py-4 rounded-2xl hover:bg-primary/80 focus:ring-4 focus:outline-none focus:ring-primary/30 transition-all duration-300 text-lg">
             Lihat Detail
         </a>
