@@ -35,7 +35,11 @@
             </div>
 
             <!-- Tab Content -->
+<<<<<<< HEAD
             <div class="prose p-3 md:p-5 pt-0 pb-7 md:text-base text-xs max-w-none text-gray-900 dark:prose-gray-900">
+=======
+            <div class="prose p-3 md:p-5 pt-0 pb-7 md:text-base text-xs max-w-none prose-gray-900  dark:prose-gray-900">
+>>>>>>> 1f856b3 (add komfychecker)
                 <div x-show="tab === 'skema'" x-transition>
                     {!! $product->description !!}
                 </div>

@@ -3,8 +3,11 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\File;
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +71,53 @@ Route::get('/test-wablas', function () {
 
     // Close cURL session
     return response()->json($response);
+});
+
+Route::get('/storage-link', function () {
+    $target = storage_path('app/public');
+    $link = public_path('storage');
+
+    if (!File::exists($link)) {
+        File::makeDirectory($link, 0755, true);
+    }
+
+    File::copyDirectory($target, $link);
+
+    return 'Storage files copied to public/storage!';
+});
+
+Route::get('/run-seeder', function () {
+    try {
+        Artisan::call('db:seed', [
+            '--class' => 'DatabaseSeeder', // atau seeder spesifik
+            '--force' => true, // penting untuk production agar bisa jalan
+        ]);
+
+        return '<h3>✅ Seeder berhasil dijalankan!</h3>';
+    } catch (\Exception $e) {
+        return '<h3>❌ Gagal menjalankan seeder:</h3><pre>' . $e->getMessage() . '</pre>';
+    }
+});
+
+Route::get('/run-schedule', function () {
+    Artisan::call('schedule:run');
+    return 'Scheduler executed at ' . now();
+});
+
+Route::get('/run-reminder', function () {
+    Artisan::call('reminder:send');
+    return 'Reminder executed at ' . now();
+});
+
+use App\Http\Controllers\CheckerFrontendController;
+
+Route::prefix('komfychecker')->name('checker.')->group(function () {
+    Route::get('/', [CheckerFrontendController::class, 'landing'])->name('landing');
+    Route::get('/form/{slug}', [CheckerFrontendController::class, 'form'])->name('form');
+    Route::get('/checkout/{invoice}', [CheckerFrontendController::class, 'checkout'])->name('checkout');
+    Route::get('/track', [CheckerFrontendController::class, 'track'])->name('track');
+    Route::get('/track/{invoice}', [CheckerFrontendController::class, 'trackDetail'])->name('track.detail');
+    Route::get('/payment-order/{invoice}', [CheckerFrontendController::class, 'payment'])->name('payment');
 });
 
 require __DIR__ . '/auth.php';

@@ -46,8 +46,8 @@
                </div>
                <h2 class="text-3xl font-black text-gray-800 mb-2 text-center">KomfyChecker</h2>
                <p class="text-gray-600 font-semibold text-center">(Cek plagiasi & AI Nyaman)</p>
-               <button type="button"
-                   class="text-white my-5 w-full bg-primary/90 hover:bg-primary font-black rounded-xl text-3xl px-5 py-3 text-center me-2 mb-2">Mulai</button>
+               <a href="{{ route('checker.landing') }}" type="button"
+                   class="text-white my-5 w-full bg-primary/90 hover:bg-primary font-black rounded-xl text-3xl px-5 py-3 text-center me-2 mb-2">Mulai</a>
            </div>
 
        </div>

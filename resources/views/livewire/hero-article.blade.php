@@ -85,7 +85,7 @@
 
                  <div class="flex flex-col sm:flex-row gap-4">
 
-                     <a href="{{route('article.show', $article->slug)}}"
+                     <a href="{{route('article.show', $article->slug ?? '')}}"
                          class="bg-primary w-max shadow-md text-white font-semibold px-3 md:px-8 py-2 md:py-4 md:rounded-xl rounded-md hover:bg-white hover:text-pink-600 text-xs md:text-base transition-all duration-300">
                          Lihat Selengkapnya
                      </a>

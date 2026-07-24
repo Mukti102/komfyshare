@@ -60,12 +60,14 @@ html {
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-    background: #c00666; /* abu-abu-600 */
+    background: #c00666;
+    /* abu-abu-600 */
     border-radius: 8px;
 }
 
 .custom-scroll::-webkit-scrollbar-track {
-    background: #111827; /* abu-abu-900 */
+    background: #111827;
+    /* abu-abu-900 */
 }
 
 @layer utilities {
@@ -73,6 +75,7 @@ html {
         0% {
             transform: translateX(0%);
         }
+
         100% {
             transform: translateX(-50%);
         }
@@ -127,27 +130,38 @@ html {
 
 
 .prose blockquote {
-  @apply border-l-4 border-primary bg-primary/10 text-primary italic px-4 py-2 rounded-md;
+    @apply border-l-4 border-primary bg-primary/10 text-primary italic px-4 py-2 rounded-md;
 }
 
 
 
 .prose ol {
-  list-style: none; /* hilangkan semua marker bawaan */
-  padding-left: 0;  /* reset padding default list */
-  @apply space-y-5;
+    list-style: none;
+    /* hilangkan semua marker bawaan */
+    padding-left: 0;
+    /* reset padding default list */
+    @apply space-y-5;
 }
 
 .prose ol {
     counter-reset: item;
 }
 
-.prose ol > li {
+.prose ol>li {
     counter-increment: item;
-    @apply mb-2 pl-8 md:pl-10 relative  text-gray-800; 
+    @apply mb-2 pl-8 md:pl-10 relative text-gray-800;
 }
 
-.prose ol > li::before {
+.prose ol>li::before {
     content: counter(item) ".";
     @apply absolute md:w-7 md:h-7 w-5 h-5 left-0 top-1 bg-primary text-white rounded-full text-center;
+}
+
+
+.app_checker {
+    padding: 50px 0;
+}
+
+.app_checker_form {
+    padding: 100px 0;
 }

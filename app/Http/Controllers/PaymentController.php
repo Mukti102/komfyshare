@@ -51,6 +51,68 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Invalid signature'], 403);
         }
 
+        // --- HANDLE CHECKER ORDER WEBHOOK ---
+        if (\Illuminate\Support\Str::startsWith($reffId, 'CHK-')) {
+            $checkerOrder = \App\Models\CheckerOrder::with('customer', 'service')->where('invoice_number', $reffId)->first();
+            
+            if (!$checkerOrder) {
+                Log::error("CheckerOrder not found for invoice: {$reffId}");
+                return response()->json(['error' => 'CheckerOrder not found'], 404);
+            }
+
+            switch ($status) {
+                case 'Success':
+                case 'Completed':
+                    if ($checkerOrder->status === 'waiting_payment') {
+                        $checkerOrder->update(['status' => 'pending']);
+                        
+                        $checkerOrder->payments()->update([
+                            'payment_status' => 'success',
+                            'transaction_code' => $reference,
+                            'paid_at' => now(),
+                        ]);
+
+                        \App\Models\CheckerPaymentLog::create([
+                            'checker_order_id' => $checkerOrder->id,
+                            'status' => 'success',
+                            'gateway_response' => $request->all(),
+                        ]);
+
+                        \App\Models\CheckerStatusLog::create([
+                            'checker_order_id' => $checkerOrder->id,
+                            'status' => 'pending',
+                            'notes' => 'Pembayaran berhasil. Pesanan menunggu konfirmasi Admin.',
+                            'created_by' => 'system'
+                        ]);
+                        
+                        // Kirim notifikasi WA (opsional/nanti bisa disesuaikan)
+                        $this->sendCheckerWhatsapp($checkerOrder->customer, $checkerOrder);
+                    }
+                    break;
+
+                case 'Failed':
+                    if ($checkerOrder->status === 'waiting_payment') {
+                        $checkerOrder->update(['status' => 'cancelled']);
+                        
+                        $checkerOrder->payments()->update([
+                            'payment_status' => 'failed',
+                            'response' => json_encode($request->all()),
+                        ]);
+
+                        \App\Models\CheckerStatusLog::create([
+                            'checker_order_id' => $checkerOrder->id,
+                            'status' => 'cancelled',
+                            'notes' => 'Pembayaran dibatalkan atau kedaluwarsa.',
+                            'created_by' => 'system'
+                        ]);
+                    }
+                    break;
+            }
+
+            return response()->json(['success' => true]);
+        }
+        // --- END HANDLE CHECKER ORDER WEBHOOK ---
+
         $order = Order::with(['costumer', 'product', 'paymentMethod', 'productPrice'])->where('invoice', $reffId)->first();
 
         if (!$order) {
@@ -208,5 +270,74 @@ KomfyShare";
         //         ]);
         //     }
         // }
+    }
+
+    public function sendCheckerWhatsapp($customer, $order)
+    {
+        $admins = User::all();
+        $customerMessage = "Hi, {NAMA}
+
+Pembayaran untuk pesanan pengecekan dokumen Anda telah kami terima dan saat ini sedang dalam antrean proses (Pending).
+Admin KomfyChecker akan segera meninjau pesanan Anda.
+
+🧾 Invoice: {INVOICE}
+📄 Layanan: {LAYANAN}
+💰 Total: Rp {TOTAL}
+
+Anda dapat memantau status pesanan kapan saja melalui tautan berikut:
+{LINK_TRACKING}
+
+Jika ada pertanyaan, silakan hubungi kami.
+
+Salam,
+KomfyChecker";
+
+        $adminMessage = "📢 [KomfyChecker] Pesanan Baru Dibayar!
+
+🧾 Invoice: {INVOICE}
+📄 Layanan: {LAYANAN}
+👤 Pelanggan: {NAMA}
+📞 WA: {PHONE}
+💰 Nominal: Rp {TOTAL}
+📅 Waktu: {DATETIME} WIB
+
+Mohon segera cek dan proses dokumen di dashboard.";
+
+        // Replace for customer
+        $customerMessage = str_replace(
+            ['{NAMA}', '{INVOICE}', '{LAYANAN}', '{TOTAL}', '{LINK_TRACKING}'],
+            [
+                $customer->name ?? 'Pelanggan',
+                $order->invoice_number,
+                $order->service->name ?? 'Layanan Pengecekan',
+                number_format($order->total_price, 0, ',', '.'),
+                route('checker.track.detail', $order->invoice_number)
+            ],
+            $customerMessage
+        );
+
+        // Replace for admin
+        $adminMessage = str_replace(
+            ['{INVOICE}', '{LAYANAN}', '{NAMA}', '{PHONE}', '{TOTAL}', '{DATETIME}'],
+            [
+                $order->invoice_number,
+                $order->service->name ?? 'Layanan',
+                $customer->name ?? 'Pelanggan',
+                $customer->phone ?? '-',
+                number_format($order->total_price, 0, ',', '.'),
+                Carbon::now()->format('d/m/Y H:i:s'),
+            ],
+            $adminMessage
+        );
+
+        if ($customer && $customer->phone) {
+            SendWhatsapp::dispatch($customer->phone, $customerMessage);
+        }
+        
+        foreach ($admins as $admin) {
+            if ($admin->phone) {
+                SendWhatsapp::dispatch($admin->phone, $adminMessage);
+            }
+        }
     }
 }

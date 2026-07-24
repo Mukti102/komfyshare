@@ -31,8 +31,11 @@
     @stack('styles')
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+<<<<<<< HEAD
     {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-ijipnLpG.css') }}"> --}}
     {{-- <script type="module" src="{{ asset('build/assets/app-7Q3XEITw.js') }}"></script> --}}
+=======
+>>>>>>> 1f856b3 (add komfychecker)
 
 </head>
 

@@ -58,12 +58,12 @@
                 <div class="grid grid-cols-3 gap-3">
                     @foreach ($paymentMethods as $paymentMethod)
                         <template x-if="category === '{{ $paymentMethod->category }}'">
-                            <button class="h-32 h-32 rounded-md overflow-hidden" type="button" @click="metode = '{{ $paymentMethod->name }}'"
+                            <button class="h-32 h-32 bg-white rounded-md overflow-hidden" type="button" @click="metode = '{{ $paymentMethod->name }}'"
                                 wire:click="setPaymentMethodId({{ $paymentMethod->id }})"
                                 :class="metode === '{{ $paymentMethod->name }}'
                                     ?
                                     'ring-2 ring-primary border-primary' :
-                                    'border border-black/10'"
+                                    'border  ring-2 ring-gray-200 border-gray-400'"
                                 class="rounded-lg p-1 transition">
                                 <img src="{{ asset('storage/' . $paymentMethod->logo) }}"
                                     alt="{{ $paymentMethod->name }}" class="w-full h-full object-contain">

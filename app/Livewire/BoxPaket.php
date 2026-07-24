@@ -237,6 +237,13 @@ class BoxPaket extends Component
 
             // setelah proses create/update data
             session()->flash('success', 'Data berhasil dikirim.');
+    
+            if(isset( $coupon)){
+            $coupon->decrement('sisa_stock', 1);
+                
+            }
+    
+
 
             $coupon->decrement('sisa_stock', 1);
 

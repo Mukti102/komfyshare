@@ -36,14 +36,13 @@ class SendReminders extends Command
                 }
 
                 // Reminder H-0
-                if ($today->isSameDay($order->end_date)) {
-                    Log::info('h0', ['h0']);
+               if ($today->greaterThanOrEqualTo($order->end_date)) {
+    Log::info('h0 atau lewat', ['h0']);
+    
+    $message = MessageFormatter::format(config('messages.reminder_p1'), $order, $customer);
+    SendWhatsapp::dispatch($customer->phone, $message);
+}
 
-
-                    $message = MessageFormatter::format(config('messages.reminder_p1'), $order, $customer);
-
-                    SendWhatsapp::dispatch($customer->phone, $message);
-                }
             }
 
             if (isset($order->start_date)) {
