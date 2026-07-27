@@ -18,11 +18,9 @@ class CheckerOrder extends Model
                 $order->files()->withTrashed()->get()->each->forceDelete();
                 $order->answers()->delete();
                 $order->statusLogs()->delete();
-                if ($order->payment) {
-                    $order->payment()->delete();
-                }
+                $order->payments()->delete();
             } else {
-                $order->files()->delete();
+                $order->files()->get()->each->delete();
             }
         });
     }
@@ -33,10 +31,14 @@ class CheckerOrder extends Model
         'checker_service_id',
         'checker_package_id',
         'payment_method_id',
+        'checker_coupon_id',
         'payment_type',
+        'original_price',
+        'discount_amount',
         'total_price',
         'token_used',
         'notes',
+        'score',
         'status',
         'estimated_finish',
         'completed_at'
@@ -63,6 +65,11 @@ class CheckerOrder extends Model
     public function service()
     {
         return $this->belongsTo(CheckerService::class, 'checker_service_id');
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(CheckerCoupon::class, 'checker_coupon_id');
     }
 
     public function package()
@@ -105,6 +112,28 @@ class CheckerOrder extends Model
     public function downloadHistories()
     {
         return $this->hasMany(CheckerDownloadHistory::class);
+    }
+
+    public function isCompleted()
+    {
+        return $this->status === 'completed';
+    }
+
+    public function getFileExpiryDateAttribute()
+    {
+        if ($this->isCompleted()) {
+            $baseDate = $this->completed_at ?? $this->updated_at ?? $this->created_at;
+            return $baseDate ? $baseDate->copy()->addDays(7) : now()->addDays(7);
+        }
+        return null;
+    }
+
+    public function getIsFileExpiredAttribute()
+    {
+        if ($this->file_expiry_date) {
+            return now()->isAfter($this->file_expiry_date);
+        }
+        return false;
     }
 
     public function notes()

@@ -11,7 +11,13 @@ class CheckerTokenWallet extends Model
 
     protected $fillable = [
         'customer_id',
-        'total_token'
+        'checker_package_id',
+        'total_token',
+        'expired_at'
+    ];
+    
+    protected $casts = [
+        'expired_at' => 'datetime',
     ];
 
     public function customer()
@@ -19,8 +25,19 @@ class CheckerTokenWallet extends Model
         return $this->belongsTo(Costumer::class, 'customer_id');
     }
 
+    public function package()
+    {
+        return $this->belongsTo(CheckerPackage::class, 'checker_package_id');
+    }
+
     public function histories()
     {
         return $this->hasMany(CheckerTokenHistory::class);
+    }
+    
+    public function scopeActive($query)
+    {
+        return $query->where('expired_at', '>', now())
+                     ->orWhereNull('expired_at');
     }
 }

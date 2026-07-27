@@ -8,20 +8,23 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class CheckerOverviewWidget extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 4;
+    protected int | string | array $columnSpan = 'full';
 
     protected function getStats(): array
     {
         return [
-            Stat::make('Total Orders', CheckerOrder::count())
-                ->description('All time checker orders')
-                ->descriptionIcon('heroicon-m-shopping-bag')
+            Stat::make('Total Checker Orders', CheckerOrder::count())
+                ->description('All time KomfyChecker orders')
+                ->descriptionIcon('heroicon-m-document-text')
                 ->color('primary'),
-            Stat::make('Pending Orders', CheckerOrder::where('status', 'pending')->count())
-                ->description('Awaiting process')
+            Stat::make('Pending / Processing', CheckerOrder::whereIn('status', ['pending', 'processing'])->count())
+                ->description('Orders awaiting completion')
+                ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
-            Stat::make('Monthly Revenue', 'Rp ' . number_format(CheckerOrder::where('status', 'completed')->whereMonth('created_at', now()->month)->sum('total_price'), 0, ',', '.'))
+            Stat::make('Checker Revenue (Monthly)', 'Rp ' . number_format(CheckerOrder::where('status', 'completed')->whereMonth('created_at', now()->month)->sum('total_price'), 0, ',', '.'))
                 ->description('Completed orders this month')
+                ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('success'),
         ];
     }

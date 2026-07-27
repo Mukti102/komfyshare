@@ -53,8 +53,10 @@ class OrderChart extends ChartWidget
         return 'line'; // bisa diganti 'bar' kalau mau
     }
 
+    protected static ?int $sort = 2;
+
     public function getColumnSpan(): int|string|array
     {
-        return 'full'; // atau bisa angka 2, 3, 4 tergantung grid
+        return 1; // Set to 1 so it fits nicely beside another widget
     }
 }

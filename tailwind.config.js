@@ -37,7 +37,7 @@ export default {
                             borderRadius: theme("borderRadius.lg"),
                             marginBottom: theme("spacing.2"),
                         },
-                       
+
                     },
                 },
                 invert: {

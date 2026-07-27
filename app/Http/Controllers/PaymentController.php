@@ -51,6 +51,61 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Invalid signature'], 403);
         }
 
+        // --- HANDLE TOKEN ORDER WEBHOOK ---
+        if (\Illuminate\Support\Str::startsWith($reffId, 'TKN-')) {
+            $tokenOrder = \App\Models\CheckerTokenOrder::with('package')->where('invoice_number', $reffId)->first();
+            
+            if (!$tokenOrder) {
+                Log::error("TokenOrder not found for invoice: {$reffId}");
+                return response()->json(['error' => 'TokenOrder not found'], 404);
+            }
+
+            if ($status === 'Success' || $status === 'Completed') {
+                if ($tokenOrder->status === 'waiting_payment') {
+                    $tokenOrder->update([
+                        'status' => 'paid',
+                        'paid_at' => now(),
+                    ]);
+
+                    // Tambah/Buat dompet token
+                    $wallet = \App\Models\CheckerTokenWallet::firstOrCreate(
+                        [
+                            'customer_id' => $tokenOrder->customer_id,
+                            'checker_package_id' => $tokenOrder->checker_package_id,
+                        ],
+                        [
+                            'total_token' => 0,
+                            'expired_at' => now()->addDays($tokenOrder->package->expired_day)
+                        ]
+                    );
+
+                    $wallet->increment('total_token', $tokenOrder->package->total_token);
+                    
+                    // Update expired date agar direset lagi sesuai masa aktif baru dari pembelian ini
+                    $wallet->update([
+                        'expired_at' => now()->addDays($tokenOrder->package->expired_day)
+                    ]);
+
+                    // Catat Histori
+                    \App\Models\CheckerTokenHistory::create([
+                        'checker_token_wallet_id' => $wallet->id,
+                        'checker_package_id' => $tokenOrder->checker_package_id,
+                        'type' => 'purchase',
+                        'token' => $tokenOrder->package->total_token,
+                        'balance_before' => $wallet->total_token - $tokenOrder->package->total_token,
+                        'balance_after' => $wallet->total_token,
+                        'description' => 'Top-Up Pembelian ' . $tokenOrder->package->name,
+                    ]);
+                }
+            } elseif ($status === 'Failed') {
+                if ($tokenOrder->status === 'waiting_payment') {
+                    $tokenOrder->update(['status' => 'cancelled']);
+                }
+            }
+
+            return response()->json(['message' => 'Token Order updated']);
+        }
+
         // --- HANDLE CHECKER ORDER WEBHOOK ---
         if (\Illuminate\Support\Str::startsWith($reffId, 'CHK-')) {
             $checkerOrder = \App\Models\CheckerOrder::with('customer', 'service')->where('invoice_number', $reffId)->first();

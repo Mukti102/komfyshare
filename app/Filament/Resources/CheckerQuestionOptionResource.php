@@ -19,6 +19,9 @@ class CheckerQuestionOptionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
     protected static ?string $navigationGroup = 'Komfy Checker / Master';
+    protected static ? string $navigationLabel = "Opsi Pertanyaan Checker";
+
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

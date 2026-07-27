@@ -27,33 +27,55 @@ class SendWhatsapp implements ShouldQueue
         $secret_key = setting('wablas.secret_key') ?? env('SECRET_KEY_WABLAS');
         $baseUrl = setting('wablas.base_url') ?? env('BASE_URL_WABLAS');
 
-        $phone = $this->normalizePhone($this->phone);
+        $mode = setting('wablas.mode') ?? 'production';
+        $testingNumbers = setting('wablas.testing_numbers') ?? [];
+        
+        $originalPhone = $this->normalizePhone($this->phone);
         $message = $this->message;
 
-        // URL encode the message
-        $message_encoded = urlencode($message);
+        $targetPhones = [];
 
-        // Build API URL
-        $api_url = "{$baseUrl}?token={$token}.{$secret_key}&phone={$phone}&message={$message_encoded}";
+        if ($mode === 'testing') {
+            // Jika mode testing aktif, ganti isi pesan dan kirim ke nomor developer
+            $message = "[TESTING MODE - Target Asli: {$originalPhone}]\n\n" . $message;
+            
+            if (empty($testingNumbers)) {
+                Log::warning('WhatsApp Testing Mode aktif, tetapi tidak ada nomor testing yang didaftarkan. Pesan dihentikan.');
+                return;
+            }
 
-        // Initialize cURL
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $api_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
-        // Execute request
-        $response = curl_exec($ch);
-
-        // Check for errors
-        if (curl_errno($ch)) {
-            // echo "cURL Error: " . curl_error($ch);
-            Log::info('send whatsapp error',['message' => $ch]);
+            foreach ($testingNumbers as $tn) {
+                $targetPhones[] = $this->normalizePhone($tn);
+            }
         } else {
-            Log::info('send whatsapp error',['message' => json_decode($response, true)]);
+            // Mode produksi
+            $targetPhones[] = $originalPhone;
         }
 
+        $message_encoded = urlencode($message);
+
+        foreach ($targetPhones as $targetPhone) {
+            // Build API URL
+            $api_url = "{$baseUrl}?token={$token}.{$secret_key}&phone={$targetPhone}&message={$message_encoded}";
+
+            // Initialize cURL
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $api_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+            // Execute request
+            $response = curl_exec($ch);
+
+            // Check for errors
+            if (curl_errno($ch)) {
+                Log::error('send whatsapp error', ['message' => curl_error($ch), 'target' => $targetPhone]);
+            } else {
+                Log::info('send whatsapp success', ['response' => json_decode($response, true), 'target' => $targetPhone]);
+            }
+            curl_close($ch);
+        }
     }
 
     private function normalizePhone(string $phone): string

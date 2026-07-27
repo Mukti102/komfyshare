@@ -47,11 +47,13 @@ class CheckerStatusLogResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('checker_order_id')
+                    ->label("Order ID")
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('changed_by')
+                    ->label("Diubah Oleh")
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

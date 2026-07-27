@@ -11,19 +11,6 @@
          x-transition:leave-end="opacity-0 scale-90"
          class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
 
-<<<<<<< HEAD
-        @if (setting('popu.information.link'))
-            <a href="{{ setting('popu.information.link') }}" target="_blank" rel="noopener noreferrer">
-                <img src="{{ 'storage/' . setting('popup.information') }}"
-                    class="w-full rounded-xl h-full object-contain" alt="">
-            </a>
-        @else
-            <div>
-                <img src="{{ 'storage/' . setting('popup.information') }}"
-                    class="w-full rounded-xl h-full object-contain" alt="">
-            </div>
-        @endif
-=======
         <div class="bg-white md:max-h-[800vh] rounded-2xl shadow-2xl md:max-w-md w-[80%] mx-auto text-center relative">
             <!-- Tombol Close -->
             <button @click="open = false"
@@ -32,7 +19,6 @@
                     <i class="fa-solid fa-xmark"></i>
                 </span>
             </button>
->>>>>>> 1f856b3 (add komfychecker)
 
             @if (setting('popup.information.link'))
                 <a href="{{ setting('popup.information.link') }}" target="_blank" rel="noopener noreferrer">

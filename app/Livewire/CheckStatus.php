@@ -29,8 +29,8 @@ class CheckStatus extends Component
     public function checkStatus()
     {   
         $tokopay = app(TokopayService::class);
-        $invoice = $this->order instanceof \App\Models\CheckerOrder ? $this->order->invoice_number : $this->order->invoice;
-        $amount = $this->order instanceof \App\Models\CheckerOrder ? $this->order->total_price : $this->order->amount;
+        $invoice = ($this->order instanceof \App\Models\CheckerOrder || $this->order instanceof \App\Models\CheckerTokenOrder) ? $this->order->invoice_number : $this->order->invoice;
+        $amount = ($this->order instanceof \App\Models\CheckerOrder || $this->order instanceof \App\Models\CheckerTokenOrder) ? $this->order->total_price : $this->order->amount;
 
         $response = $tokopay->checkStatus(
             $this->order->paymentMethod->code,

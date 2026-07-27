@@ -22,6 +22,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
+use Filament\Navigation\NavigationGroup;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,6 +32,28 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->navigationGroups([
+        NavigationGroup::make()
+            ->label('Komfy Checker / Master'),
+
+        NavigationGroup::make()
+            ->label('Komfy Checker / Transactions'),
+
+        NavigationGroup::make()
+            ->label('Komfy Checker / Monitoring'),
+
+        NavigationGroup::make()
+            ->label('Master'),
+
+        NavigationGroup::make()
+            ->label('Transaksi'),
+
+        NavigationGroup::make()
+            ->label('Laporan'),
+
+        NavigationGroup::make()
+            ->label('Settings'),
+    ])
             ->plugins([
                 FilamentEditProfilePlugin::make()
                     ->slug('my-profile')

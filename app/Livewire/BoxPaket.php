@@ -53,32 +53,37 @@ class BoxPaket extends Component
         $this->prices = $prices;
         $this->paymentMethods = PaymentMetods::all();
         $this->paymentMethodId = $this->paymentMethods->first()->id;
-        // ✅ Panggil RestCountries API dari server
-        $response = Http::get('https://restcountries.com/v3.1/region/asia', [
-            'fields' => 'name,idd,cca2',
-        ]);
+        
+        // Menggunakan daftar statis agar lebih cepat dan tidak bergantung pada API eksternal
+        $this->codes = [
+            ['code' => '+62', 'label' => '🇮🇩 Indonesia'],
+            ['code' => '+60', 'label' => '🇲🇾 Malaysia'],
+            ['code' => '+65', 'label' => '🇸🇬 Singapura'],
+            ['code' => '+66', 'label' => '🇹🇭 Thailand'],
+            ['code' => '+63', 'label' => '🇵🇭 Filipina'],
+            ['code' => '+84', 'label' => '🇻🇳 Vietnam'],
+            ['code' => '+673', 'label' => '🇧🇳 Brunei'],
+            ['code' => '+855', 'label' => '🇰🇭 Kamboja'],
+            ['code' => '+856', 'label' => '🇱🇦 Laos'],
+            ['code' => '+95', 'label' => '🇲🇲 Myanmar'],
+            ['code' => '+670', 'label' => '🇹🇱 Timor-Leste'],
+            ['code' => '+91', 'label' => '🇮🇳 India'],
+            ['code' => '+86', 'label' => '🇨🇳 Tiongkok'],
+            ['code' => '+81', 'label' => '🇯🇵 Jepang'],
+            ['code' => '+82', 'label' => '🇰🇷 Korea Selatan'],
+            ['code' => '+886', 'label' => '🇹🇼 Taiwan'],
+            ['code' => '+852', 'label' => '🇭🇰 Hong Kong'],
+            ['code' => '+93', 'label' => '🇦🇫 Afganistan'],
+            ['code' => '+880', 'label' => '🇧🇩 Bangladesh'],
+            ['code' => '+977', 'label' => '🇳🇵 Nepal'],
+            ['code' => '+92', 'label' => '🇵🇰 Pakistan'],
+            ['code' => '+94', 'label' => '🇱🇰 Sri Lanka'],
+            ['code' => '+1', 'label' => '🇺🇸 Amerika Serikat'],
+            ['code' => '+44', 'label' => '🇬🇧 Inggris Raya'],
+            ['code' => '+61', 'label' => '🇦🇺 Australia'],
+        ];
 
-        if ($response->ok()) {
-            $this->codes = collect($response->json())
-                ->filter(fn($c) => isset($c['idd']['root'])) // ambil hanya yg ada kode telp
-                ->map(function ($c) {
-                    $iso2 = strtoupper($c['cca2']);
-
-                    // konversi ISO2 ke emoji flag
-                    $flag = implode('', array_map(function ($char) {
-                        return mb_convert_encoding('&#' . (127397 + ord($char)) . ';', 'UTF-8', 'HTML-ENTITIES');
-                    }, str_split($iso2)));
-
-                    return [
-                        'code'  => $c['idd']['root'] . ($c['idd']['suffixes'][0] ?? ''),
-                        'label' => $flag . ' ' . ($c['name']['common'] ?? $iso2),
-                    ];
-                })
-                ->values()
-                ->all();
-
-            $this->countryCode = '+62';
-        }
+        $this->countryCode = '+62';
     }
 
     public function setPaymentMethodId($paymentMethodId)

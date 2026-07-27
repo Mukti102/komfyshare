@@ -19,6 +19,7 @@ class CheckerPaymentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
     protected static ?string $navigationGroup = 'Komfy Checker / Transactions';
+    protected static ? string $navigationLabel = "Pembayaran";
 
     public static function canCreate(): bool
     {

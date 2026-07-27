@@ -19,6 +19,9 @@ class CheckerPackageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
     protected static ?string $navigationGroup = 'Komfy Checker / Master';
+    protected static ? string $navigationLabel = "Paket Token";
+    protected static ?int $navigationSort = 4;
+
 
     public static function form(Form $form): Form
     {
@@ -52,6 +55,26 @@ class CheckerPackageResource extends Resource
                             ->label('Deskripsi')
                             ->columnSpanFull(),
                     ])->columns(2),
+                    
+                Forms\Components\Section::make('Layanan yang didukung (Mapping Token)')
+                    ->schema([
+                        Forms\Components\Repeater::make('packageServices')
+                            ->relationship('packageServices')
+                            ->schema([
+                                Forms\Components\Select::make('checker_service_id')
+                                    ->label('Layanan')
+                                    ->relationship('service', 'name')
+                                    ->required(),
+                                Forms\Components\TextInput::make('token_cost')
+                                    ->label('Biaya Token (Token Cost)')
+                                    ->numeric()
+                                    ->required()
+                                    ->default(1),
+                            ])
+                            ->columns(2)
+                            ->columnSpanFull()
+                            ->addActionLabel('Tambah Layanan'),
+                    ]),
             ]);
     }
 
@@ -92,6 +115,7 @@ class CheckerPackageResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -113,6 +137,7 @@ class CheckerPackageResource extends Resource
         return [
             'index' => Pages\ListCheckerPackages::route('/'),
             'create' => Pages\CreateCheckerPackage::route('/create'),
+            'view' => Pages\ViewCheckerPackage::route('/{record}'),
             'edit' => Pages\EditCheckerPackage::route('/{record}/edit'),
         ];
     }

@@ -12,11 +12,14 @@ class CheckerFile extends Model
 
     protected static function booted()
     {
-        static::forceDeleted(function ($checkerFile) {
+        $deleteFile = function ($checkerFile) {
             if ($checkerFile->file_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($checkerFile->file_path)) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($checkerFile->file_path);
             }
-        });
+        };
+
+        static::deleted($deleteFile);
+        static::forceDeleted($deleteFile);
     }
 
     protected $fillable = [

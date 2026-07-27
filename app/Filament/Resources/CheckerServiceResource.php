@@ -16,9 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class CheckerServiceResource extends Resource
 {
     protected static ?string $model = CheckerService::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-cube';
     protected static ?string $navigationGroup = 'Komfy Checker / Master';
+    protected static ? string $navigationLabel = "Layanan Checker";
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

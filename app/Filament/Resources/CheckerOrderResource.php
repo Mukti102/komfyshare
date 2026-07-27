@@ -20,6 +20,8 @@ class CheckerOrderResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
     protected static ?string $navigationGroup = 'Komfy Checker / Transactions';
 
+    protected static ? string $navigationLabel = "Transaksi";
+
     public static function form(Form $form): Form
     {
         return $form
@@ -151,6 +153,77 @@ class CheckerOrderResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('upload_result')
+                    ->label('Upload Hasil')
+                    ->icon('heroicon-o-arrow-up-tray')
+                    ->color('success')
+                    ->form([
+                        Forms\Components\FileUpload::make('result_file')
+                            ->label('File Hasil Proses')
+                            ->disk('public')
+                            ->directory('checker_files')
+                            ->preserveFilenames()
+                            ->required(),
+                        Forms\Components\TextInput::make('score')
+                            ->label('Score / Nilai')
+                            ->placeholder('Contoh: 15% atau 85 Score')
+                            ->nullable(),
+                        Forms\Components\Textarea::make('notes')
+                            ->label('Catatan Tambahan (Opsional)'),
+                        Forms\Components\Select::make('status')
+                            ->label('Update Status Order')
+                            ->options([
+                                'completed' => 'Selesai (Completed)',
+                                'review' => 'Perlu Direview (Review)',
+                            ])
+                            ->default('completed')
+                            ->required(),
+                    ])
+                    ->action(function (CheckerOrder $record, array $data): void {
+                        $wasCompleted = $record->status === 'completed';
+                        
+                        if (isset($data['result_file'])) {
+                            $fullPath = storage_path('app/public/' . $data['result_file']);
+                            
+                            $record->files()->create([
+                                'category' => 'result',
+                                'original_name' => basename($data['result_file']),
+                                'file_name' => basename($data['result_file']),
+                                'extension' => pathinfo($data['result_file'], PATHINFO_EXTENSION),
+                                'mime_type' => file_exists($fullPath) ? mime_content_type($fullPath) : 'application/octet-stream',
+                                'file_size' => file_exists($fullPath) ? filesize($fullPath) : 0,
+                                'file_path' => $data['result_file'],
+                                'uploaded_by' => 'admin',
+                            ]);
+                        }
+                        
+                        $updateData = ['status' => $data['status']];
+                        
+                        if (!empty($data['score'])) {
+                            $updateData['score'] = $data['score'];
+                        }
+                        
+                        $record->update($updateData);
+                        
+                        if (!empty($data['notes'])) {
+                             $record->statusLogs()->create([
+                                 'status' => $data['status'],
+                                 'notes' => $data['notes'],
+                                 'created_by' => 'admin'
+                             ]);
+                        }
+                        
+                        if (!$wasCompleted && $data['status'] === 'completed' && $record->customer && $record->customer->phone) {
+                            $message = "Halo {$record->customer->name},\n\nPesanan pengecekan dokumen Anda (Invoice: *{$record->invoice_number}*) telah *SELESAI* diproses.\n\nSilakan cek dan unduh hasilnya di link berikut:\n" . route('checker.track.detail', $record->invoice_number) . "\n\nTerima kasih telah menggunakan layanan KomfyChecker!";
+                            \App\Jobs\SendWhatsapp::dispatch($record->customer->phone, $message);
+                        }
+                        
+                        \Filament\Notifications\Notification::make()
+                            ->title('Hasil berhasil diupload')
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (CheckerOrder $record) => !in_array($record->status, ['completed', 'cancelled'])),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])

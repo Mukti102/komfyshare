@@ -142,6 +142,18 @@ class Settings extends BaseSettings
                             TextInput::make('wablas.base_url')
                                 ->label('BASE URL')
                                 ->placeholder('https://texas.wablas.com/api/send-message'),
+                            \Filament\Forms\Components\Select::make('wablas.mode')
+                                ->label('WhatsApp Mode')
+                                ->options([
+                                    'production' => 'Production (Kirim ke User Asli)',
+                                    'testing' => 'Testing (Kirim ke Developer)',
+                                ])
+                                ->default('production')
+                                ->required(),
+                            \Filament\Forms\Components\TagsInput::make('wablas.testing_numbers')
+                                ->label('Nomor WhatsApp Testing')
+                                ->placeholder('Tambahkan nomor lalu tekan Enter')
+                                ->helperText('Contoh format: 628123456789. Digunakan hanya saat Mode WhatsApp berada pada status Testing.'),
                         ])->columns(2),
                 ]),
         ];
